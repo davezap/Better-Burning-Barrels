@@ -113,15 +113,15 @@ default debugging is minimal and more for your benefit.
 Prints to the server log environmental information that is useful for 
 configuring Barrels.
 Log example ...
-[BBB] Sunrise 5:14, Sunset 18:46, Temp 11.6051, DateTime 2023 9 28 20:11 daytime=false
+```[BBB] Sunrise 5:14, Sunset 18:46, Temp 11.6051, DateTime 2023 9 28 20:11 daytime=false```
 	
 ### DebugYAY [whole seconds, defaults to 0]
 Every DebugYAY prints a list of all players and locations on the server.
 Example...
-YAY 1 Players | DaveZ (76561198113121974) @ <3715.817871, 402.012451, 6000.250488> | ...
+``` YAY 1 Players | DaveZ (76561198113121974) @ <3715.817871, 402.012451, 6000.250488> | ...```
 
 ### BarrelLocations [array of BarrelLocation]
-	The array of BarrelLocation objects, described next.
+The array of BarrelLocation objects, described next.
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -129,6 +129,10 @@ YAY 1 Players | DaveZ (76561198113121974) @ <3715.817871, 402.012451, 6000.25048
 
 ### Type 	[string "Fireplace" or "Barrel" default]
 
+### Name [string]
+This is an optional name for the barrel, this is only printed to the logs. If 
+you don't give a name the logs will just show a list index number with the first
+in the config being #0
 
 ### Position [vector decimal [x,y,z], The only required parameter]
 x,y,z coordinates to place the barrel.
