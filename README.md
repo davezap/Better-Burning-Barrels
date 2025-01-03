@@ -252,15 +252,15 @@ the radius ListProximityB.
 
 ### ListMode [whole number, 0 is default]
 This option modifies the ordering and priority of Standard Conditionals and
-Player List Conditionals, where
+Player List Conditionals, where  
 0 = ListModeParamB Barrel OFF state overrides ListProximityA Barrel ON state.
-Both override all other Barrel "On..." settings.
+Both override all other Barrel "On..." settings.  
 1 = ListModeParamA Barrel ON state overrides ListProximityB Barrel OFF state.
-Both override all other Barrel "On..." settings.
-2 = As 0 except Barrel "On..." settings override both if true.
-3 = As 1 except Barrel "On..." settings override both if true.
-4 = As 0 except Barrel "On..." settings override both if false.
-5 = As 1 except Barrel "On..." settings override both if false.
+Both override all other Barrel "On..." settings.  
+2 = As 0 except Barrel "On..." settings override both if true.  
+3 = As 1 except Barrel "On..." settings override both if true.  
+4 = As 0 except Barrel "On..." settings override both if false.  
+5 = As 1 except Barrel "On..." settings override both if false.  
 
 
 <!-- ----------------------------------------------------------------------- -->
