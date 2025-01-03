@@ -318,7 +318,7 @@ keep their fire burning while TeamB's objective is to extinguish it.
 
 The following BarrelLocation object says that as long as one member of TeamA 
 remains within 100 meters of the barrel it will remain on, however, if 2 members 
-if TeamB gets within 10 meters of the barrel it will go out.
+if TeamB get within 10 meters of the barrel it will go out.
 
 The Barrel is anyway always on at night and so TeamB cannot win by attacking at 
 this time.
@@ -353,15 +353,15 @@ this time.
 }
 ```
 
-With DebugBarrels enabled server admins can see the following entry in the logs
-indicating a win for TeamB.
+Server admins can see the following entry in the logs indicating a win for 
+TeamB.
 
 ```[BBB] ID:0 extinguish.```
 
 NOTE: The example used ListMode=2. If ListMode=0 was used then the barrel would
 stay lit at night even if all TeamA members left the area. There are many
-different logical combinations to be had here. I'll put more examples on the 
-Discord server.
+different logical combinations to be had here. I'll put more examples on 
+Discord.
 
 
 <!-- ----------------------------------------------------------------------- -->

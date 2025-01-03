@@ -581,7 +581,7 @@ modded class MissionServer
 
 			if(BBB_Types.base.IsBurning() && barrelConfig.GetIgnite() == false){
 
-				BBB_Log.LogEx("Barrel:"  + bname + " - Extinguish."); 
+				BBB_Log.Log("Barrel:"  + bname + " - Extinguish."); 
 				array<EntityAI> subItemsExit = new array<EntityAI>;
 				BBB_Types.base.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, subItemsExit);
 				for (int i = 0; i < subItemsExit.Count(); i++)
@@ -601,7 +601,7 @@ modded class MissionServer
 				if(!rememberBarrelWasOpen) BBB_Types.OverrideOpenState(1);
 
 				//Print("[BBB] Barrel:"  + barrelID + " Fill" + " IsBurning " + ourBarrelHoles.IsBurning() + " IsWet " + ourBarrelHoles.IsWet() );
-				BBB_Log.LogEx("Barrel:"  + bname + " - Relight.");
+				BBB_Log.Log("Barrel:"  + bname + " - Relight.");
 				//BBreak = true;
 				
 				ItemMaintenance(barrelConfig);
