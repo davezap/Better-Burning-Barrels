@@ -97,7 +97,8 @@ after you make changes to it.
 
 The following is a description of all the options currently available. 
 
-Version:"0.50" **!!Do not change this!!**
+### Version:"0.50" 
+**!!Do not change this!!**
 
 ### BarrelUpdateTime [whole seconds, defaults to 5]
 Test player location to barrels every BarrelUpdateTime seconds.
@@ -117,7 +118,6 @@ Log example ...
 	
 ### DebugYAY [whole seconds, defaults to 0]
 Every DebugYAY prints a list of all players and locations on the server.
-Example...
 ``` YAY 1 Players | DaveZ (76561198113121974) @ <3715.817871, 402.012451, 6000.250488> | ...```
 
 ### BarrelLocations [array of BarrelLocation]
@@ -141,31 +141,38 @@ x,y,z coordinates to place the barrel.
 to the server log.
 
 If you use another means to get coordinates that do not give the Y (height)
-coordinate,	such as iZurvive just set y to 0 but read below.
+coordinate,	such as iZurvive just set y to 0, see DontSnapToGround.
 
-**NOTE** : Do not place barrels within 1 metre of one another. The mod deletes
-all other barrels within this range for housekeeping purposes.
+**NOTE** : Do not place your regular in game barrels or fireplaces within 
+1 metre of one ours. The mod deletes all others within this range for 
+housekeeping purposes.
 
 
 ### DontSnapToGround [0 or 1, 0 by default]
 The default behavior is to snap the y (vertical) position of the barrel	to
-whatever surface is directly below. If you leave DontSnapToGround=0 and 
-specify a Y coordinate BBB will cast a ray from +0.5 metres down to the	next
+whatever surface is directly below. If you leave DontSnapToGround=0 (default) 
+and specify a Y coordinate BBB will cast a ray from +0.5m down to the next
 surface and snap the barrel to that, if you set Y=0 BBB will instead cast a
-ray from 1000 meters above the ground and snap to the first thing it hits.
+ray from 1000 meters and snap to the first thing it hits (the ground or top of 
+a structure what ever comes first). The reason for the +0.5 meters is that tools
+like VPP that copy the position to clipboard with 'P' key tend to be exactly on
+the floor inside buildings and barrels can end up snapping to the ground below
+the floor.
 	
-If you want to force a particular Y coordinate you need to set 
-DontSnapToGround=1. For instance where you want floating Barrels or there
-is some problem with the surface snapping.
+If you want to force a specific Y coordinate you need to set DontSnapToGround=1. 
+For instance, where you want floating Barrels or there is some problem with the
+surface snapping.
 
 
 ### LogPlayerProximity [whole meters, 0 is default and disabled]
 Additionally record information about players proximity to this specific 
-barrel.
+barrel. This is independent from OnPlayerProximity
 
 
 <!-- ----------------------------------------------------------------------- -->
 ## Barrel Specific Options
+
+These options only relate to barrels and will be ignored by fireplaces.
 
 ### Open [0 or 1 (default)]
 Sets the initial state of the barrel lid to be Open (1) or Closed (0)
@@ -180,6 +187,9 @@ Available options for your choosing are blue, green, red and yellow.
 
 <!-- ----------------------------------------------------------------------- -->
 ## Fireplace Type Options
+
+Conversely, these options only relate to fireplaces and will be ignored by 
+barrels.
 
 ### Tripod [true or false (default)]
 Deploys a cooking tripod over the fire.
