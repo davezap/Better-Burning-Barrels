@@ -1,5 +1,5 @@
 
-             DayZ Mod : DaveZ's Better Burning Barrels (BBB)
+# DayZ Mod : DaveZ's Better Burning Barrels (BBB)
 
 Visit the discord server to report bugs, ask questions or just say hello.
 	https://discord.gg/tvrFAMgUtt
@@ -56,35 +56,35 @@ You will need to have DayZ and DayZServer ready to go, I can't help with that.
 
 Then install the mod to your server in the usual way :) ha, everyone says that.
 No but really, for those that don't yet know.
-	- Go to Steam / Library / DayZ / Workshop
-	- Search for "Better Burning Barrels"
-	- That's me wearing a hard-hat and high-viz
-	- Click the + icon to subscribe to the mod.
-	- Steam will update your DayZ install to include the mod, so close it down.
-	- Explore your way here (being the default)
-		C:\Program Files (x86)\Steam\steamapps\common\DayZ\!Workshop
-	- Copy the "@Better Burning Barrels" folder.
-	- Now explore to the server
-		C:\Program Files (x86)\Steam\steamapps\common\DayZServer
-	- Paste the folder here (there is no !Workshop folder the mods just go in
-		the server root.
+1. Go to Steam / Library / DayZ / Workshop
+2. Search for "Better Burning Barrels"
+3. That's me wearing a hard-hat and high-viz
+4. Click the + icon to subscribe to the mod.
+5. Steam will update your DayZ install to include the mod, so close it down.
+6. Explore your way here (being the default)
+   ``` C:\Program Files (x86)\Steam\steamapps\common\DayZ\!Workshop ```
+7. Copy the "@Better Burning Barrels" folder.
+   Now explore to the server
+   ``` C:\Program Files (x86)\Steam\steamapps\common\DayZServer ```
+8. Paste the folder here (there is no !Workshop folder the mods just go in
+   the server root.
 
 Setup
-	- Copy the file @Better Burning Barrels\keys\DaveZ.bikey
-		To the DayZServer\keys folder.
-	- Copy the @Better Burning Barrels\ServerProfiles\DaveZ folder 
-		To the DayZServer\ServerProfiles folder. 
-		This folder contains the BBBConfig.json and is where you will be adding
-		all your BARRELS along with any scripts.
-		The DaveZ/BBB folder contains documentation and scripting 
-		examples (optional).
-	- Configure your server startup script to load the mod. Most people have a 
-	  .bat file with somethign like this.
-	  start "DayZ Server" /min "DayZServer_x64.exe" -config=%serverConfig% -port=%serverPort% "-mod=@CF;@VPPAdminTools;@BBB" 
+1. Copy the file @Better Burning Barrels\keys\DaveZ.bikey
+   To the DayZServer\keys folder.
+2. Copy the @Better Burning ``` Barrels\ServerProfiles\DaveZ ``` folder 
+   To the ``` DayZServer\ServerProfiles ``` folder. 
+   This folder contains the BBBConfig.json and is where you will be adding
+   all your BARRELS along with any scripts.
+   The DaveZ/BBB folder contains documentation and scripting 
+   examples (optional).
+3. Configure your server startup script to load the mod. Most people have a 
+   .bat file with something like this.
+   ``` start "DayZ Server" /min "DayZServer_x64.exe" -config=%serverConfig% -port=%serverPort% "-mod=@CF;@VPPAdminTools;@BBB" ``` 
 	  
 
 Runtime debug information is available via the files with the prefix
-	DayZServer/ServerProfiles/script_***.log
+``` DayZServer/ServerProfiles/script_***.log ```
 The relevant lines are prefixed with "[BBB]"
 
 
@@ -97,90 +97,91 @@ after you make changes to it.
 
 The following is a description of all the options currently available. 
 
-Version !!Do not change this!!
+Version:"0.50" **!!Do not change this!!**
 
-BarrelUpdateTime [whole seconds, defaults to 5]
-	Test player location to barrels every BarrelUpdateTime seconds.
-	The more frequently the faster barrels will react but this may increase load
-	on the server (not that it's really much of a load)
+### BarrelUpdateTime [whole seconds, defaults to 5]
+Test player location to barrels every BarrelUpdateTime seconds.
+The more frequently the faster barrels will react but this may increase load
+on the server (not that it's really much of a load)
 
-DebugBarrels  [0 or 1, 0 by default]
-	Setting to 1 prints additional debug information during run time. This is 
-	very helpful for me to receive, it really helps diagnose problems. The
-	default debugging is minimal and more for your benefit.
+### DebugBarrels  [0 or 1, 0 by default]
+Setting to 1 prints additional debug information during run time. This is 
+very helpful for me to receive, it really helps diagnose problems. The
+default debugging is minimal and more for your benefit.
 	
-DebugWeather  [whole seconds, disabled by and defaults to 0]
-	Prints to the server log environmental information that is useful for 
-	configuring Barrels.
-	Log example ...
-	[BBB] Sunrise 5:14, Sunset 18:46, Temp 11.6051, DateTime 2023 9 28 20:11 daytime=false
+### DebugWeather  [whole seconds, disabled by and defaults to 0]
+Prints to the server log environmental information that is useful for 
+configuring Barrels.
+Log example ...
+[BBB] Sunrise 5:14, Sunset 18:46, Temp 11.6051, DateTime 2023 9 28 20:11 daytime=false
 	
-DebugYAY [whole seconds, defaults to 0]
-	Every DebugYAY prints a list of all players and locations on the server.
-	Example...
-	YAY 1 Players | DaveZ (76561198113121974) @ <3715.817871, 402.012451, 6000.250488> | ...
+### DebugYAY [whole seconds, defaults to 0]
+Every DebugYAY prints a list of all players and locations on the server.
+Example...
+YAY 1 Players | DaveZ (76561198113121974) @ <3715.817871, 402.012451, 6000.250488> | ...
 
-BarrelLocations [array of BarrelLocation]
+### BarrelLocations [array of BarrelLocation]
 	The array of BarrelLocation objects, described next.
 
 
 <!-- ----------------------------------------------------------------------- -->
 ## BarrelLocation
 
-Type 	[string "Fireplace" or "Barrel" default]
+### Type 	[string "Fireplace" or "Barrel" default]
 
 
-Position [vector decimal [x,y,z], The only required parameter]
-	x,y,z coordinates to place the barrel.
+### Position [vector decimal [x,y,z], The only required parameter]
+x,y,z coordinates to place the barrel.
+
+**HINT**: To help you determine barrel locations DebugYAY writes plater positions
+to the server log.
+
+If you use another means to get coordinates that do not give the Y (height)
+coordinate,	such as iZurvive just set y to 0 but read below.
+
+**NOTE** : Do not place barrels within 1 metre of one another. The mod deletes
+all other barrels within this range for housekeeping purposes.
+
+
+### DontSnapToGround [0 or 1, 0 by default]
+The default behavior is to snap the y (vertical) position of the barrel	to
+whatever surface is directly below. If you leave DontSnapToGround=0 and 
+specify a Y coordinate BBB will cast a ray from +0.5 metres down to the	next
+surface and snap the barrel to that, if you set Y=0 BBB will instead cast a
+ray from 1000 meters above the ground and snap to the first thing it hits.
 	
-	HINT: To help you determine barrel locations DebugYAY writes plater positions
-		  to the server log.
-	
-	If you use another means to get coordinates that do not give the Y (height)
-	coordinate,	such as iZurvive just set y to 0 but read below.
-
-	NOTE : Do not place barrels within 1 metre of one another. The mod deletes
-		   all other barrels within this range for housekeeping purposes.
+If you want to force a particular Y coordinate you need to set 
+DontSnapToGround=1. For instance where you want floating Barrels or there
+is some problem with the surface snapping.
 
 
-DontSnapToGround [0 or 1, 0 by default]
-	The default behavior is to snap the y (vertical) position of the barrel	to
-	whatever surface is directly below. If you leave DontSnapToGround=0 and 
-	specify a Y coordinate BBB will cast a ray from +0.5 metres down to the	next
-	surface and snap the barrel to that, if you set Y=0 BBB will instead cast a
-	ray from 1000 meters above the ground and snap to the first thing it hits.
-	
-	If you want to force a particular Y coordinate you need to set 
-	DontSnapToGround=1. For instance where you want floating Barrels or there
-	is some problem with the surface snapping.
-
-
-LogPlayerProximity [whole meters, 0 is default and disabled]
-	Additionally record information about players proximity to this specific 
-	barrel.
+### LogPlayerProximity [whole meters, 0 is default and disabled]
+Additionally record information about players proximity to this specific 
+barrel.
 
 
 <!-- ----------------------------------------------------------------------- -->
 ## Barrel Specific Options
 
-Open [0 or 1 (default)]
-	Sets the initial state of the barrel lid to be Open (1) or Closed (0)
+### Open [0 or 1 (default)]
+Sets the initial state of the barrel lid to be Open (1) or Closed (0)
 	
-Locked [0 (default) or 1]
-	Locks (1) the barrel lid to its initial state, preventing the player from
-	changing it via the normal interaction.
+### Locked [0 (default) or 1]
+Locks (1) the barrel lid to its initial state, preventing the player from
+changing it via the normal interaction.
 
-Color, Colour [string "red", "blue", "green", "yellow", default is "red"]
-	Pick from a variety of vibrant barrel colours to beautify your base.
-	Available options for your choosing are blue, green, red and yellow.
+### Color / Colour [string "red", "blue", "green", "yellow", default is "red"]
+Pick from a variety of vibrant barrel colours to beautify your base.
+Available options for your choosing are blue, green, red and yellow.
 
+<!-- ----------------------------------------------------------------------- -->
 ## Fireplace Type Options
 
-Tripod [true or false (default)]
-	Deploys a cooking tripod over the fire.
+### Tripod [true or false (default)]
+Deploys a cooking tripod over the fire.
 
-Circle [true or false (default)]
-	Constructs a stone circle around the fire.
+### Circle [true or false (default)]
+Constructs a stone circle around the fire.
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -191,28 +192,28 @@ specify OnDuringNight=1 and OnPlayerProximity=5 the barrel will burn when either
 condition is true.
 
 
-OnTimeFrom, OnTimeTo [decimal HourMins, 0 is default and disabled]
-	Ignite the barrel starting at OnTimeFrom and ending just prior to OnTimeTo. 
-	For example, if you have OnTimeFrom=17 and OnTimeTo=19 the barrel will burn 
-	starting at 5 pm and turn off at 7 pm. Times crossing midnight are 
-	handled for example OnTimeFrom=21 and OnTimeTo=3 will run for 6 hours
-	starting at 9 pm. Times are decimal calculated as Hour + (Mins / 60), 
-	so 6:30 am would be 6.5.
+### OnTimeFrom, OnTimeTo [decimal HourMins, 0 is default and disabled]
+Ignite the barrel starting at OnTimeFrom and ending just prior to OnTimeTo. 
+For example, if you have OnTimeFrom=17 and OnTimeTo=19 the barrel will burn 
+starting at 5 pm and turn off at 7 pm. Times crossing midnight are 
+handled for example OnTimeFrom=21 and OnTimeTo=3 will run for 6 hours
+starting at 9 pm. Times are decimal calculated as Hour + (Mins / 60), 
+so 6:30 am would be 6.5.
 
-OnTempBelow, OnTempAbove [decimal degrees Celsius, 0 is default and disabled]
-	OnTempBelow Turns the barrel on when temp drops below this value. Can be any 
-	positive or negative decimal number. For example 14.9. 
-	OnTempAbove likewise does the opposite and is provided if a fire is wanted
-	only on nice sunny days.
+### OnTempBelow, OnTempAbove [decimal degrees Celsius, 0 is default and disabled]
+OnTempBelow Turns the barrel on when temp drops below this value. Can be any 
+positive or negative decimal number. For example 14.9. 
+OnTempAbove likewise does the opposite and is provided if a fire is wanted
+only on nice sunny days.
 
-OnDuringNight, OnDuringDay [0 or 1, 0 is default and disabled]
-	DayZ provides approximate sunrise and sunset times corrected for the time
-	of year, so if OnDuringNight is set to 1 the barrel will light up between
-	these times. OnDuringDay does the inverse.
+### OnDuringNight, OnDuringDay [0 or 1, 0 is default and disabled]
+DayZ provides approximate sunrise and sunset times corrected for the time
+of year, so if OnDuringNight is set to 1 the barrel will light up between
+these times. OnDuringDay does the inverse.
 
-OnPlayerProximity [whole meters, 0 is default and disabled]
-	Barrel will fire up when players are within this many meters of a barrel and
-	automatically extinguish when they leave the radius.
+### OnPlayerProximity [whole meters, 0 is default and disabled]
+Barrel will fire up when players are within this many meters of a barrel and
+automatically extinguish when they leave the radius.
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -223,29 +224,29 @@ list) that you can populate with players Steam ID's. A variety of logical
 conditions can be then used to determine if the barrel should be burning or 
 extinguished based on players from either team proximity to it.
 
-ListProximityA [whole meters, 0 is default and disabled]
-ListPlayersA   [Array of String of Player Steam ID's]
-ListModeParamA [whole number]
-	Barrel is ON if at least ListModeParamA members of ListPlayersA are within 
-	the radius ListProximityA.
+### ListProximityA [whole meters, 0 is default and disabled]
+### ListPlayersA   [Array of String of Player Steam ID's]
+### ListModeParamA [whole number]
+Barrel is ON if at least ListModeParamA members of ListPlayersA are within 
+the radius ListProximityA.
 
-ListProximityB [whole meters, 0 is default and disabled]
-ListPlayersB [Array of String of Player Steam ID's]
-ListModeParamB [whole number]
-	Barrel is OFF if at least ListModeParamB members of ListPlayersB are within 
-	the radius ListProximityB.
+### ListProximityB [whole meters, 0 is default and disabled]
+### ListPlayersB [Array of String of Player Steam ID's]
+### ListModeParamB [whole number]
+Barrel is OFF if at least ListModeParamB members of ListPlayersB are within 
+the radius ListProximityB.
 
-ListMode [whole number, 0 is default]
-	This option modifies the ordering and priority of Standard Conditionals and
-	Player List Conditionals, where
-	0: ListModeParamB Barrel OFF state overrides ListProximityA Barrel ON state.
-		Both override all other Barrel "On..." settings
-	1: ListModeParamA Barrel ON state overrides ListProximityB Barrel OFF state.
-		Both override all other Barrel "On..." settings
-	2: As 0 except Barrel "On..." settings override both if true.
-	3: As 1 except Barrel "On..." settings override both if true.
-	4: As 0 except Barrel "On..." settings override both if false.
-	5: As 1 except Barrel "On..." settings override both if false.
+### ListMode [whole number, 0 is default]
+This option modifies the ordering and priority of Standard Conditionals and
+Player List Conditionals, where
+0: ListModeParamB Barrel OFF state overrides ListProximityA Barrel ON state.
+   Both override all other Barrel "On..." settings
+1: ListModeParamA Barrel ON state overrides ListProximityB Barrel OFF state.
+   Both override all other Barrel "On..." settings
+2: As 0 except Barrel "On..." settings override both if true.
+3: As 1 except Barrel "On..." settings override both if true.
+4: As 0 except Barrel "On..." settings override both if false.
+5: As 1 except Barrel "On..." settings override both if false.
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -254,9 +255,9 @@ ListMode [whole number, 0 is default]
 Since Version 0.3 you can now write server side Enforce script that is dynamically loaded by Better Burning Barrels and will allow server owners to write their own Barrel Logic. This was done after I came to the realisation that the ListMode stuff was too complex and didn't even cover all the possible combinations and server owners will likely have a never-ending list of options for me to add :)
 
 To be loaded the script must be called BBB.c and be located in your 
-DayZServer/ServerProfiles/DaveZ folder alongside your BBBConfig.json file.
+``` DayZServer/ServerProfiles/DaveZ ``` folder alongside your BBBConfig.json file.
 Some example scripts have been added to the mod folder.
-	@Better Burning Barrels/ServerProfiles/DaveZ/BBB/
+``` @Better Burning Barrels/ServerProfiles/DaveZ/BBB/ ```
 
 Comments in that script give the basics, additional details are on Discord.
 
@@ -280,7 +281,7 @@ Here are some example barrel configurations for BBBConfig.json
 The following BarrelLocation will fire up when the temperature drops below
 14 degrees or at night time. The barrel has its lid open and is locked so
 players cannot close it. This means they are unable to cook on it. 
-
+```
 {
     "Version": "0.5",
 	"BarrelUpdateTime": 10,
@@ -294,7 +295,7 @@ players cannot close it. This means they are unable to cook on it.
 		}
 	]
 }
-
+```
 
 ## Capture-the-flag with Player List Conditionals
 
@@ -308,6 +309,7 @@ if TeamB gets within 10 meters of the barrel it will go out.
 The Barrel is anyway always on at night and so TeamB cannot win by attacking at 
 this time.
 
+```
 {
     "Version": "0.5",
 	"BarrelUpdateTime": 1,
@@ -339,11 +341,12 @@ this time.
 		}
 	]
 }
+```
 
 With DebugBarrels enabled server admins can see the following entry in the logs
 indicating a win for TeamB.
 
-	[BBB] ID:0 extinguish.
+```[BBB] ID:0 extinguish.```
 
 NOTE: The example used ListMode=2. If ListMode=0 was used then the barrel would
 stay lit at night even if all TeamA members left the area. There are many
@@ -359,6 +362,7 @@ four barrels at Green Mountain with various options.
 
 Note: our new showroom is located in the big shed in Kamyshovo!
 
+```
 {
     "Version": "0.50",
 	"BarrelUpdateTime": 1,
@@ -434,47 +438,47 @@ Note: our new showroom is located in the big shed in Kamyshovo!
 		}
     ]
 }
-
+```
 
 <!-- ----------------------------------------------------------------------- -->
 # FULL CHANGE LOG
 
 This log notes changes to the first Github release for version 0.05.
 
-Version 0.45 - 29 July 2023
-	Fixed bug where all items (including meat and pots) were be deleted from 
-		Barrel inventory when it was extinguished. This wont happen now.
-	Finally figured out how to get the intersecting surface below the barrel.
-		so snapping now works inside buildings and on rooftops. 
-		See DontSnapToGround for more details.
+## Version 0.45 - 29 July 2023
+- Fixed bug where all items (including meat and pots) were be deleted from 
+  Barrel inventory when it was extinguished. This wont happen now.
+- Finally figured out how to get the intersecting surface below the barrel.
+  so snapping now works inside buildings and on rooftops. 
+  See DontSnapToGround for more details.
 
-Version 0.4 - 28 July 2023
-	Major internal refactoring to improve script support added last version
-	Writing documentation of BBB classes for user scripts, now available in...
-		@BBB\ServerProfiles\DaveZ\BBB\documentation
-	Writing example user scripts, now available in...
-		@BBB\ServerProfiles\DaveZ\BBB
-	BBB_Settings can now dynamically add/remove Barrels.
-	BBB_BarrelLocation can now dynamically SetPosition() and SetColor().
-	Players are immediately now removed from Barrel when they leave Proximity.
-	Added support for the American spelling of Color, you're welcome.
-	Fixed bug where Barrels with only position and no other settings would not 
-		fire up.
+## Version 0.4 - 28 July 2023
+- Major internal refactoring to improve script support added last version
+  Writing documentation of BBB classes for user scripts, now available in...
+  ```@BBB\ServerProfiles\DaveZ\BBB\documentation```
+  Writing example user scripts, now available in...
+  ``` @BBB\ServerProfiles\DaveZ\BBB ```
+- BBB_Settings can now dynamically add/remove Barrels.
+- BBB_BarrelLocation can now dynamically SetPosition() and SetColor().
+- Players are immediately now removed from Barrel when they leave Proximity.
+- Added support for the American spelling of Color, you're welcome.
+- Fixed bug where Barrels with only position and no other settings would not 
+  fire up.
 	
-Version 0.3 - 22 July 2023
-	Added user injectable Enforce script BBB.c for doing your own Barrel Logic.
-	Barrel processing is now done on the server-side.
-	Removed all client-side code.
-	No longer dependent on Community Framework or any other mod.
-	Improved server-side efficiency. Players are tested every 30 seconds unless
-		near the barrel then they are tested every BarrelUpdateTime.
-	PlayerReportTime has been deprecated
-	ProximityTimeout has been deprecated
-	DebugYAY has been modified for server-side operation.
-	[BBB] log entries are now time-stamped using the server time zone.
-	BarrelUpdateTime has been added.
-	Forgot to actually implement ListModeParamA and ListModeParamB in 
-	previous version :)
+## Version 0.3 - 22 July 2023
+- Added user injectable Enforce script BBB.c for doing your own Barrel Logic.
+- Barrel processing is now done on the server-side.
+- Removed all client-side code.
+- No longer dependent on Community Framework or any other mod.
+- Improved server-side efficiency. Players are tested every 30 seconds unless
+  near the barrel then they are tested every BarrelUpdateTime.
+- PlayerReportTime has been deprecated
+- ProximityTimeout has been deprecated
+- DebugYAY has been modified for server-side operation.
+- [BBB] log entries are now time-stamped using the server time zone.
+- BarrelUpdateTime has been added.
+- Forgot to actually implement ListModeParamA and ListModeParamB in 
+  previous version :)
 
-Version 0.3 - 16 July 2023
-	initial release to Steam.
+## Version 0.3 - 16 July 2023
+- initial release to Steam.
