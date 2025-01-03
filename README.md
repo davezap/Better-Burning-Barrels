@@ -1,4 +1,4 @@
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
              DayZ Mod : DaveZ's Better Burning Barrels (BBB)
 
 Visit the discord server to report bugs, ask questions or just say hello.
@@ -6,7 +6,12 @@ Visit the discord server to report bugs, ask questions or just say hello.
 
 Repacking of this mod is now permitted, please read terms on the discord.
 
--- ABOUT -----------------------------------------------------------------------
+The project is now open source and can be found here
+	https://github.com/davezap/Better-Burning-Barrels
+
+
+<!-- ----------------------------------------------------------------------- -->
+# ABOUT
 
 Better Burning Barrels is the most unnecessarily complicated barrel mod for DayZ
 This mod lets you add burning barrels at specific locations that are on fire
@@ -20,7 +25,8 @@ teammates to create interesting capture-the-flag scenarios.
 It's probably easier to talk about the things Better Burning Barrels cannot do!
 
 
--- WHAT's NEW ------------------------------------------------------------------
+<!-- ----------------------------------------------------------------------- -->
+# WHAT's NEW
 
 It's been over a year and I'm back at it! Decided it was long overdue an update.
 
@@ -43,12 +49,13 @@ Version 0.50 - 1 Jan 2025
 See end of this document for previous change history.
 
 
--- HOW TO INSTALL --------------------------------------------------------------
+<!-- ----------------------------------------------------------------------- -->
+# HOW TO INSTALL
 
 You will need to have DayZ and DayZServer ready to go, I can't help with that.
 
-Then install the mod to your server in the usual way :) ha everyone says that.
-No but really, for those that don't know.
+Then install the mod to your server in the usual way :) ha, everyone says that.
+No but really, for those that don't yet know.
 	- Go to Steam / Library / DayZ / Workshop
 	- Search for "Better Burning Barrels"
 	- That's me wearing a hard-hat and high-viz
@@ -81,7 +88,8 @@ Runtime debug information is available via the files with the prefix
 The relevant lines are prefixed with "[BBB]"
 
 
--- BBBConfig.json configuration ------------------------------------------------
+<!-- ----------------------------------------------------------------------- -->
+# BBBConfig.json configuration
 
 Take care to not break the JSON file by forgetting quotes or commas. It's easy 
 to do. Recommend you use a tool like https://jsonlint.com/ to validate your file
@@ -116,7 +124,8 @@ BarrelLocations [array of BarrelLocation]
 	The array of BarrelLocation objects, described next.
 
 
--- BarrelLocation --------------------------------------------------------------
+<!-- ----------------------------------------------------------------------- -->
+## BarrelLocation
 
 Type 	[string "Fireplace" or "Barrel" default]
 
@@ -151,7 +160,8 @@ LogPlayerProximity [whole meters, 0 is default and disabled]
 	barrel.
 
 
-~~ Barrel Specific Options ~~
+<!-- ----------------------------------------------------------------------- -->
+## Barrel Specific Options
 
 Open [0 or 1 (default)]
 	Sets the initial state of the barrel lid to be Open (1) or Closed (0)
@@ -164,7 +174,7 @@ Color, Colour [string "red", "blue", "green", "yellow", default is "red"]
 	Pick from a variety of vibrant barrel colours to beautify your base.
 	Available options for your choosing are blue, green, red and yellow.
 
-~~ Fireplace Type Options ~~
+## Fireplace Type Options
 
 Tripod [true or false (default)]
 	Deploys a cooking tripod over the fire.
@@ -173,7 +183,8 @@ Circle [true or false (default)]
 	Constructs a stone circle around the fire.
 
 
-~~ Standard Conditional Options ~~
+<!-- ----------------------------------------------------------------------- -->
+## Standard Conditional Options
 
 The following parameters are logically OR'd together. For example, if you 
 specify OnDuringNight=1 and OnPlayerProximity=5 the barrel will burn when either
@@ -204,7 +215,8 @@ OnPlayerProximity [whole meters, 0 is default and disabled]
 	automatically extinguish when they leave the radius.
 
 
-~~ Player List Conditional Options ~~
+<!-- ----------------------------------------------------------------------- -->
+## Player List Conditional Options
 
 Each Barrel has two lists ListPlayersA (the ON list) and ListPlayersB (the OFF
 list) that you can populate with players Steam ID's. A variety of logical 
@@ -235,22 +247,18 @@ ListMode [whole number, 0 is default]
 	4: As 0 except Barrel "On..." settings override both if false.
 	5: As 1 except Barrel "On..." settings override both if false.
 
-	
--- BBB.c User Script -----------------------------------------------------------
 
-New to Version 0.3 is the ability to write Enforce script that is dynamically
-loaded by Better Burning Barrels and will allow server owners to write their own
-Barrel Logic. This was done after I came to the realisation that the ListMode 
-stuff was too complex and didn't even cover all the possible combinations and 
-server owners will likely have a never-ending list of options for me to add :)
+<!-- ----------------------------------------------------------------------- -->
+# BBB.c User Enforce Script
+
+Since Version 0.3 you can now write server side Enforce script that is dynamically loaded by Better Burning Barrels and will allow server owners to write their own Barrel Logic. This was done after I came to the realisation that the ListMode stuff was too complex and didn't even cover all the possible combinations and server owners will likely have a never-ending list of options for me to add :)
 
 To be loaded the script must be called BBB.c and be located in your 
 DayZServer/ServerProfiles/DaveZ folder alongside your BBBConfig.json file.
-A skeleton script has been added to the mod folder.
+Some example scripts have been added to the mod folder.
 	@Better Burning Barrels/ServerProfiles/DaveZ/BBB/
 
-Comments in that script provide the basics, but as this is going to be a big
-topic moving forward I'll put the details on Discord rather than in this README.
+Comments in that script give the basics, additional details are on Discord.
 
 The script is run server-side and has access to all DayZ global Classes and 
 proto Functions. The parent module is GetGame().GetMission().MissionScript.
@@ -261,13 +269,13 @@ https://community.bistudio.com/wiki/DayZ:Enforce_Script_Syntax#Primitive_Types
 The DayZ Code Explorer by Zeroy is the most amazing resource for DayZ scripters.
 https://dayzexplorer.zeroy.com/
 
-I'm going to work on the documentation for this, so please keep an eye on our
-Discord for updates.
 
+<!-- ----------------------------------------------------------------------- -->
+# Config Examples
 
--- Examples --------------------------------------------------------------------
+Here are some example barrel configurations for BBBConfig.json
 
-~~ Heating but no cooking with Standard Conditionals ~~
+## Heating but no cooking with Standard Conditionals
 
 The following BarrelLocation will fire up when the temperature drops below
 14 degrees or at night time. The barrel has its lid open and is locked so
@@ -288,7 +296,7 @@ players cannot close it. This means they are unable to cook on it.
 }
 
 
-~~ Capture-the-flag with Player List Conditionals ~~
+## Capture-the-flag with Player List Conditionals
 
 Let's consider a capture-the-flag style event where the goal is for TeamA to 
 keep their fire burning while TeamB's objective is to extinguish it.
@@ -343,7 +351,8 @@ different logical combinations to be had here. I'll put more examples on the
 Discord server.
 
 
--- Default BBBConfig.json ----------------------------------------------------
+<!-- ----------------------------------------------------------------------- -->
+# Default BBBConfig.json
 
 Below is the default json configuration that ships with the mod that places
 four barrels at Green Mountain with various options.
@@ -427,8 +436,10 @@ Note: our new showroom is located in the big shed in Kamyshovo!
 }
 
 
+<!-- ----------------------------------------------------------------------- -->
+# FULL CHANGE LOG
 
--- CHANGE LOG ------------------------------------------------------------------
+This log notes changes to the first Github release for version 0.05.
 
 Version 0.45 - 29 July 2023
 	Fixed bug where all items (including meat and pots) were be deleted from 
