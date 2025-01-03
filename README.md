@@ -69,7 +69,7 @@ No but really, for those that don't yet know.
 8. Paste the folder here (there is no !Workshop folder the mods just go in
    the server root.
 
-Setup
+Then...
 1. Copy the file @Better Burning Barrels\keys\DaveZ.bikey
    To the DayZServer\keys folder.
 2. Copy the @Better Burning ``` Barrels\ServerProfiles\DaveZ ``` folder 
@@ -239,14 +239,14 @@ the radius ListProximityB.
 ### ListMode [whole number, 0 is default]
 This option modifies the ordering and priority of Standard Conditionals and
 Player List Conditionals, where
-0: ListModeParamB Barrel OFF state overrides ListProximityA Barrel ON state.
-   Both override all other Barrel "On..." settings
-1: ListModeParamA Barrel ON state overrides ListProximityB Barrel OFF state.
-   Both override all other Barrel "On..." settings
-2: As 0 except Barrel "On..." settings override both if true.
-3: As 1 except Barrel "On..." settings override both if true.
-4: As 0 except Barrel "On..." settings override both if false.
-5: As 1 except Barrel "On..." settings override both if false.
+0 = ListModeParamB Barrel OFF state overrides ListProximityA Barrel ON state.
+Both override all other Barrel "On..." settings.
+1 = ListModeParamA Barrel ON state overrides ListProximityB Barrel OFF state.
+Both override all other Barrel "On..." settings.
+2 = As 0 except Barrel "On..." settings override both if true.
+3 = As 1 except Barrel "On..." settings override both if true.
+4 = As 0 except Barrel "On..." settings override both if false.
+5 = As 1 except Barrel "On..." settings override both if false.
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -283,17 +283,17 @@ The following BarrelLocation will fire up when the temperature drops below
 players cannot close it. This means they are unable to cook on it. 
 ```
 {
-    "Version": "0.5",
-	"BarrelUpdateTime": 10,
-    "BarrelLocations": [
-		{
-			"OnTempBelow": 14.0,
-			"OnDuringNight": 1,
-			"Locked": 1,
-			"Open": 1,
-			"Position": [3710.82, 402.01, 5996.32]
-		}
-	]
+  "Version": "0.5",
+  "BarrelUpdateTime": 10,
+  "BarrelLocations": [
+    {
+      "OnTempBelow": 14.0,
+      "OnDuringNight": 1,
+      "Locked": 1,
+      "Open": 1,
+      "Position": [3710.82, 402.01, 5996.32]
+  }
+  ]
 }
 ```
 
@@ -311,35 +311,31 @@ this time.
 
 ```
 {
-    "Version": "0.5",
-	"BarrelUpdateTime": 1,
-	"DebugBarrels": 1,
-    "BarrelLocations": [
-		{
-			"Colour": "Red",
-			"OnDuringNight": 1,
-			"ListMode": 2,
-			"ListProximityA": 100,
-			"ListModeParamA": 1,
-			"ListPlayersA": [
-				"11111111111111111",
-				"22222222222222222",
-				"33333333333333333"
-			],
-			"ListProximityB": 10,
-			"ListModeParamB": 2,
-			"ListPlayersB": [
-				"44444444444444444",
-				"55555555555555555",
-				"66666666666666666"
-			],
-			"Position": [
-				3710.81298828125,
-				402.0,
-				5993.59326171875
-			]
-		}
-	]
+  "Version": "0.5",
+  "BarrelUpdateTime": 1,
+  "DebugBarrels": 1,
+  "BarrelLocations": [
+    {
+      "Colour": "Red",
+      "OnDuringNight": 1,
+      "ListMode": 2,
+      "ListProximityA": 100,
+      "ListModeParamA": 1,
+      "ListPlayersA": [
+        "11111111111111111",
+        "22222222222222222",
+        "33333333333333333"
+      ],
+      "ListProximityB": 10,
+      "ListModeParamB": 2,
+      "ListPlayersB": [
+        "44444444444444444",
+        "55555555555555555",
+        "66666666666666666"
+      ],
+      "Position": [3710.81,402.0,5993.59]
+    }
+  ]
 }
 ```
 
@@ -364,79 +360,79 @@ Note: our new showroom is located in the big shed in Kamyshovo!
 
 ```
 {
-    "Version": "0.50",
-	"BarrelUpdateTime": 1,
-	"DebugBarrels": 1,
-	"DebugWeather": 60,
-	"DebugYAY": 60,
-    "BarrelLocations": [
-        {
-			"Name": "B0_RED",
-			"Colour":"Red",
-			"OnPlayerProximity":3,
-            "Open": 1,
-            "Position": [12075.33, 3.089654, 3456.172119]
-		},
-        {
-			"Name": "B1_YLW",
-			"Colour":"Yellow",
-			"OnPlayerProximity":3,
-            "Open": 0,
-            "Position": [12073.12, 3.12, 3455.68]
-		},
-        {
-			"Name": "B2_GRN",
-			"Colour":"Green",
-			"OnPlayerProximity":3,
-            "Open": 0,
-            "Position": [12069.923828, 3.078028, 3454.740234]
-		},
-        {
-			"Name": "B3_BLU",
-			"Colour":"Blue",
-			"OnPlayerProximity":3,
-            "Open": 1,
-            "Position": [12078.101563, 3.096107, 3457.109619]
-		},
-        {
-			"Name":"F4",
-			"Type":"Fireplace",
-			"Tripod": true,
-			"Circle": true,
-			"OnPlayerProximity":10,
-            "Position": [12070.697266, 3.116442, 3451.480469]
-		},
-        {
-			"Name":"F5",
-			"Type":"Fireplace",
-			"OnPlayerProximity":3,
-            "Position": [12071.165039, 3.063281, 3448.481934]
-		},
-		{
-			"Name": "B6_RED",
-			"Colour":"Red",
-            "Open": 1,
-			"Locked": 1,
-			"OnDuringNight": 1,
-            "Position": [12074.443359, 3.049184, 3441.508301]
-		},
-		{
-			"Name": "B7_BLU",
-			"Colour":"Blue",
-            "Open": 1,
-			"Locked": 1,
-			"OnDuringDay": 1,
-			"LogPlayerProximity": 10,
-            "Position": [12081.784180, 3.053838, 3443.565918]
-		},
-		{
-			"Name": "B8_GRN",
-			"Colour":"Green",
-            "Open": 1,
-			"Locked": 1,
-            "Position": [12079.044922, 3.034917, 3436.718750]
-		}
-    ]
+  "Version": "0.50",
+  "BarrelUpdateTime": 1,
+  "DebugBarrels": 1,
+  "DebugWeather": 60,
+  "DebugYAY": 60,
+  "BarrelLocations": [
+    {
+      "Name": "B0_RED",
+      "Colour":"Red",
+      "OnPlayerProximity":3,
+      "Open": 1,
+      "Position": [12075.33, 3.089654, 3456.172119]
+    },
+    {
+      "Name": "B1_YLW",
+      "Colour":"Yellow",
+      "OnPlayerProximity":3,
+      "Open": 0,
+      "Position": [12073.12, 3.12, 3455.68]
+    },
+    {
+      "Name": "B2_GRN",
+      "Colour":"Green",
+      "OnPlayerProximity":3,
+      "Open": 0,
+      "Position": [12069.923828, 3.078028, 3454.740234]
+    },
+    {
+      "Name": "B3_BLU",
+      "Colour":"Blue",
+      "OnPlayerProximity":3,
+      "Open": 1,
+      "Position": [12078.101563, 3.096107, 3457.109619]
+    },
+    {
+      "Name":"F4",
+      "Type":"Fireplace",
+      "Tripod": true,
+      "Circle": true,
+      "OnPlayerProximity":10,
+      "Position": [12070.697266, 3.116442, 3451.480469]
+    },
+    {
+      "Name":"F5",
+      "Type":"Fireplace",
+      "OnPlayerProximity":3,
+      "Position": [12071.165039, 3.063281, 3448.481934]
+    },
+    {
+      "Name": "B6_RED",
+      "Colour":"Red",
+      "Open": 1,
+      "Locked": 1,
+      "OnDuringNight": 1,
+      "Position": [12074.443359, 3.049184, 3441.508301]
+    },
+    {
+      "Name": "B7_BLU",
+      "Colour":"Blue",
+      "Open": 1,
+      "Locked": 1,
+      "OnDuringDay": 1,
+      "LogPlayerProximity": 10,
+      "Position": [12081.784180, 3.053838, 3443.565918]
+    },
+    {
+      "Name": "B8_GRN",
+      "Colour":"Green",
+      "Open": 1,
+      "Locked": 1,
+      "Position": [12079.044922, 3.034917, 3436.718750]
+    }
+  ]
 }
 ```
 
