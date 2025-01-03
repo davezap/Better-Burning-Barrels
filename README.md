@@ -13,7 +13,7 @@ The project is now open source and can be found here
 <!-- ----------------------------------------------------------------------- -->
 # ABOUT
 
-Better Burning Barrels is the most unnecessarily complicated barrel mod for DayZ
+Better Burning Barrels is the most unnecessarily complicated barrel mod for DayZ. 
 This mod lets you add burning barrels at specific locations that are on fire
 and never go out or optionally turn on/off with a variety of configurable
 options such as, the time of day, temperature, player proximity or even your own
