@@ -154,8 +154,9 @@ class BBB_Settings: BBB_JsonMap
 		if (FileExist(BBB_CONFIG))
 		{
 			BBB_Json json = new BBB_Json();
+			BBB_Log.Log("Reading " + BBB_CONFIG);
 			json.load(BBB_CONFIG);
-			BBB_Log.Log("Post json.load dump...");
+			//BBB_Log.Log("Post json.load dump...");
 			json.dump(null, 0);
 
     		settings.JSON_Import(json.GetDocRoot());

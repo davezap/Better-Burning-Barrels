@@ -53,6 +53,12 @@ class DaveZSettings
 
 // How to JSON : https://www.json.org/json-en.html
 
+
+void json_debug(string str)
+{
+    //BBB_Log.Log(str);
+}
+
 //! JSON Decode state machine states. Each state represents the next expected
 //! element(s).
 enum BBB_EJState
@@ -74,7 +80,7 @@ enum BBB_EJState
 //! A single JSON Key Value pair.
 class BBB_JsonKeyValue
 {
-    private string m_sKey; 
+    private string m_sKey;
     private int m_iIndex;
     private string m_sValue;
     private typename m_tValue;
@@ -190,7 +196,7 @@ class BBB_Json
         for(int a=0; a<keys.Count(); a++)
         {
             int l = keys.Get(a).Length();
-            //BBB_Log.Log("[JSON] " + l + " " + keys.Get(a));
+            //json_debug("[JSON] " + l + " " + keys.Get(a));
             keys.Set(a, keys.Get(a).Substring(12, keys.Get(a).Length() - 12) );
         }
     }
@@ -204,13 +210,13 @@ class BBB_Json
         {
             pad += " ";
         }
-        BBB_Log.Log("[JSON] " + pad + " cnt=" + vm.Count() + " vm=" + vm);
+        json_debug("[JSON] " + pad + " cnt=" + vm.Count() + " vm=" + vm);
         if(indent>24) return;
         
 
         TStringArray keys = new TStringArray();
         GetKeysSortedByLineNum(vm, keys);
-        //BBB_Log.Log("[JSON] KEYS " + keys);
+        //json_debug("[JSON] KEYS " + keys);
         
 
         foreach(string k: keys)
@@ -219,17 +225,17 @@ class BBB_Json
             k = Descape(k);
 
             if(value.GetType()==map) {
-                BBB_Log.Log("[JSON] " + pad + value.GetType() + " " + k + " {");
+                json_debug("[JSON] " + pad + value.GetType() + " " + k + " {");
                 dump(value.GetChildMap(), indent+4);
             } else if(value.GetType()==array) {
-                BBB_Log.Log("[JSON] " + pad + value.GetType() + " " + k + " [");
+                json_debug("[JSON] " + pad + value.GetType() + " " + k + " [");
                 dump(value.GetChildMap(), indent+4);
             } else if(value.GetType()==string) {
-                BBB_Log.Log("[JSON] " + pad + value.GetType() + " " + k + "=" + Descape(value.GetValue()));
+                json_debug("[JSON] " + pad + value.GetType() + " " + k + "=" + Descape(value.GetValue()));
             } else {
-                BBB_Log.Log("[JSON] " + pad + value.GetType() + " " + k + "=" + value.GetValue());
+                json_debug("[JSON] " + pad + value.GetType() + " " + k + "=" + value.GetValue());
                 /*if(value.GetType()==float) {
-                    BBB_Log.Log("[JSON] ** " + value.GetValue().GetValueFloat());
+                    json_debug("[JSON] ** " + value.GetValue().GetValueFloat());
                 }*/
             }
             
@@ -252,7 +258,7 @@ class BBB_Json
         {
             if(parseState==0) {
                 int b = str.IndexOfFrom(a, "\\");
-                //BBB_Log.Log("[JSON] descape_a [" + str + "] [" + outString + "] " + a + " " + b);
+                //json_debug("[JSON] descape_a [" + str + "] [" + outString + "] " + a + " " + b);
                 
                 if(b==-1)
                 {
@@ -262,7 +268,7 @@ class BBB_Json
 
                 a=b;
                 if(a - start > 0) {
-                    //BBB_Log.Log("[JSON] descape_c " + start + " " + (a - start - 1));
+                    //json_debug("[JSON] descape_c " + start + " " + (a - start - 1));
                     outString += str.Substring(start, a - start);
                 }
 
@@ -272,7 +278,7 @@ class BBB_Json
             } else if(parseState==1) {
                 start++;
                 string char = str.Get(a);
-                //BBB_Log.Log("[JSON] descape_b [" + str + "] [" + outString + "] [" + char + "]" + a + " " + start);
+                //json_debug("[JSON] descape_b [" + str + "] [" + outString + "] [" + char + "]" + a + " " + start);
                 if(char=="/") { outString += "/"; }
                 else if (char=="\"") { outString += "\"" ;}
                 else if (char=="b") { outString += (8).AsciiToString();}
@@ -297,7 +303,7 @@ class BBB_Json
                     {
                         parseState = 0;
                         outString += digitSum.AsciiToString();
-                        //BBB_Log.Log("[JSON] descape_y [" + digitSum + "] [" + outString + "]");
+                        //json_debug("[JSON] descape_y [" + digitSum + "] [" + outString + "]");
                         digitSum = 0; digitCount = 0;
                     }
                 } else {
@@ -348,7 +354,7 @@ class BBB_Json
 
         TStringArray keys = new TStringArray();
         GetKeysSortedByLineNum(vm, keys);
-        //BBB_Log.Log("[JSON] KEYS " + keys);
+        //json_debug("[JSON] KEYS " + keys);
         string last_key = keys.Get(keys.Count() - 1);
         string line = "";
         foreach(string k: keys)
@@ -383,7 +389,7 @@ class BBB_Json
 
     void save(string filename)
     {
-        BBB_Log.Log("[JSON] Save " + filename);
+        json_debug("[JSON] Save " + filename);
         lineNum = 0;
         string data = "{";
         save_dump(data, docRoot, 4, lineNum);
@@ -394,7 +400,7 @@ class BBB_Json
             FPrint(fh, data);
             CloseFile(fh);
         } else {
-            BBB_Log.Log("[JSON] Could not access " + filename);
+            json_debug("[JSON] Could not access " + filename);
         }
         
     }
@@ -410,17 +416,17 @@ class BBB_Json
         activeNode = new BBB_JsonKeyValueMap();
         newNode.SetChildMap(activeNode);
         
-        BBB_Log.Log("[JSON] " + lineNum + ": PUSH " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
+        json_debug("[JSON] " + lineNum + ": PUSH " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
     }
 
     private void Pop()
     {
-        BBB_Log.Log("[JSON] " + lineNum + ": POP " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
+        json_debug("[JSON] " + lineNum + ": POP " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
         if(docStack.Count() > 0) {
 
             activeNode = docStack.Get(docStack.Count() - 1);
             
-            BBB_Log.Log("[JSON] " + lineNum + " SetNoNewLine ? " + activeContainer.GetLineNumber() );
+            json_debug("[JSON] " + lineNum + " SetNoNewLine ? " + activeContainer.GetLineNumber() );
             if(activeContainer.GetLineNumber() == lineNum) 
             {
                 activeContainer.SetNoNewLine();
@@ -446,8 +452,8 @@ class BBB_Json
             activeContainer = null;
             state = 5;
         }
-        //BBB_Log.Log("[JSON] " + lineNum + ": Active Parent=" + activeContainer);
-        //BBB_Log.Log("[JSON] " + lineNum + ": cnt=" + activeNode.Count() + " keys=" + activeNode.GetKeyArray());                        
+        //json_debug("[JSON] " + lineNum + ": Active Parent=" + activeContainer);
+        //json_debug("[JSON] " + lineNum + ": cnt=" + activeNode.Count() + " keys=" + activeNode.GetKeyArray());                        
     }
 
     BBB_JsonKeyValueMap load(string filename)
@@ -480,13 +486,13 @@ class BBB_Json
                 tokenType = line.ParseStringEx(token);
                 if(tokenType==0 || tokenType==5) break;
 
-                BBB_Log.Log("[JSON] " + lineNum + ": state=" + state + " " + tokenType.ToString() + ":" + token + " activeNode " + activeNode);
+                json_debug("[JSON] " + lineNum + ": state=" + state + " " + tokenType.ToString() + ":" + token + " activeNode " + activeNode);
                 if(activeNode==null) {
                     // first token must be { our doc root.
                     if(tokenType==1 && token=="{") {
                         activeNode = docRoot;
                     } else {
-                        //BBB_Log.Log("[JSON] " + lineNum + ": Error expecting { to be first token");
+                        //json_debug("[JSON] " + lineNum + ": Error expecting { to be first token");
                         error = true;
                         break;
                     }
@@ -499,7 +505,7 @@ class BBB_Json
                         Pop();
                         continue;
                     } else {
-                        //BBB_Log.Log("[JSON] " + lineNum + ": Expecting key but got " + tokenType + ":" + token);
+                        //json_debug("[JSON] " + lineNum + ": Expecting key but got " + tokenType + ":" + token);
                         error = true;
                         break;                      
                     }
@@ -508,7 +514,7 @@ class BBB_Json
                     if(tokenType==1 && token==":") {
                         state = BBB_EJState.OPENBRACKET_OPENBRACE_VALUE;
                     } else {
-                        //BBB_Log.Log("[JSON] " + lineNum + ": Expecting : but got " + tokenType + ":" + token);
+                        //json_debug("[JSON] " + lineNum + ": Expecting : but got " + tokenType + ":" + token);
                         error = true;
                         break;                              
                     }
@@ -526,17 +532,17 @@ class BBB_Json
                         // push string or number
                         state = BBB_EJState.CLOSEBRACE_COMMA;
                     } else {
-                        BBB_Log.Log("[JSON] " + lineNum + ": Expecting value but got " + tokenType + ":" + token);
+                        json_debug("[JSON] " + lineNum + ": Expecting value but got " + tokenType + ":" + token);
                         error = true;
                         break;
                     }
 
                     newType = whatType(token, tokenType);
-                    //BBB_Log.Log("[JSON] " + lineNum + ": " + key + "=" + token);
+                    //json_debug("[JSON] " + lineNum + ": " + key + "=" + token);
                     newNode = new BBB_JsonKeyValue(key, token, newType, lineNum, activeNode.Count(), map);
                     if(activeNode.Contains(newNode.GetKey()))
                     {
-                       BBB_Log.Log("[JSON] " + lineNum + ": replacing duplicate key \"" + newNode.GetKey() + "\""); 
+                       json_debug("[JSON] " + lineNum + ": replacing duplicate key \"" + newNode.GetKey() + "\""); 
                        activeNode.Remove(newNode.GetKey());
                     }
 
@@ -559,7 +565,7 @@ class BBB_Json
                         // push string or number
                         state = BBB_EJState.CLOSEBRACKET_COMMA;
                     } else {
-                        //BBB_Log.Log("[JSON] " + lineNum + ": Expecting value but got " + tokenType + ":" + token);
+                        //json_debug("[JSON] " + lineNum + ": Expecting value but got " + tokenType + ":" + token);
                         error = true;
                         break;   
                     }
@@ -578,7 +584,7 @@ class BBB_Json
                     } else if(tokenType==1 && token==",") {
                         state = BBB_EJState.CLOSEBRACKET_OPENBRACKET_OPENBRACE_VALUE;
                     } else {
-                        //BBB_Log.Log("[JSON] " + lineNum + ": Expecting , ] but got " + tokenType + ":" + token);
+                        //json_debug("[JSON] " + lineNum + ": Expecting , ] but got " + tokenType + ":" + token);
                         error = true;
                         break;   
                     }
@@ -589,12 +595,12 @@ class BBB_Json
                     } else if(tokenType==1 && token==",") {
                         state = BBB_EJState.KEY_CLOSEBRACKET;
                     } else {
-                        //BBB_Log.Log("[JSON] " + lineNum + ": Expecting , } but got " + tokenType + ":" + token);
+                        //json_debug("[JSON] " + lineNum + ": Expecting , } but got " + tokenType + ":" + token);
                         error = true;
                         break;   
                     }
                 } else {
-                    //BBB_Log.Log("[JSON] " + lineNum + ": Bad state? got " + tokenType + ":" + token);
+                    //json_debug("[JSON] " + lineNum + ": Bad state? got " + tokenType + ":" + token);
                     error = true;
                     break; 
                 }
@@ -651,7 +657,7 @@ class BBB_JsonMapMember
         int result;
         string value;
         bool created = false;
-        BBB_Log.Log("[JSON] " + m_sMethod + " k=" + m_sJsonKey + " jk=" + KeyValue + " c=" + Create + " >> " + pActiveNode);
+        json_debug("[JSON] " + m_sMethod + " k=" + m_sJsonKey + " jk=" + KeyValue + " c=" + Create + " >> " + pActiveNode);
 
         if(KeyValue==null && Create && pActiveNode)
         {
@@ -675,21 +681,21 @@ class BBB_JsonMapMember
             pActiveNode.Insert(KeyValue.GetKey(), KeyValue);
             created = true;
         }
-        //BBB_Log.Log("[JSON] Export ...");
+        //json_debug("[JSON] Export ...");
         if(m_tCType == vector || m_tCType == array || m_tCType == map || (m_tOtype==void && !isTypePrimitive(m_tCType)))
         {
             if(m_tCType == map || (m_tOtype==void && !isTypePrimitive(m_tCType)))
             {
                 KeyValue.SetValue("{");
-                BBB_Log.Log("[JSON]     Export2 {");
+                json_debug("[JSON]     Export2 {");
 
             } else {
                 KeyValue.SetValue("[");
-                BBB_Log.Log("[JSON]     Export2 [");
+                json_debug("[JSON]     Export2 [");
             }
             activeNode = KeyValue.GetChildMap();
             if(!activeNode) {
-                BBB_Log.Log("[JSON]     Export3 create BBB_JsonKeyValueMap()");
+                json_debug("[JSON]     Export3 create BBB_JsonKeyValueMap()");
                 activeNode = new BBB_JsonKeyValueMap();
                 KeyValue.SetChildMap(activeNode);
                 created = true;
@@ -698,13 +704,13 @@ class BBB_JsonMapMember
             }
         }
 
-        BBB_Log.Log("[JSON]     Export " + m_tCType + "<" + m_tOtype + "> " + m_sMethod + " >> " + m_sJsonKey);
+        json_debug("[JSON]     Export " + m_tCType + "<" + m_tOtype + "> " + m_sMethod + " >> " + m_sJsonKey);
 
         if(m_tCType == int)
         {
             int iv;
             result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, iv);
-            BBB_Log.Log("[JSON]     Export value " + m_sMethod + "=" + iv);
+            json_debug("[JSON]     Export value " + m_sMethod + "=" + iv);
             KeyValue.SetValue(iv.ToString());
             if(iv!=0) empty = false;
 
@@ -712,7 +718,7 @@ class BBB_JsonMapMember
         {
             float fv;
             result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, fv);
-            BBB_Log.Log("[JSON]     Export value " + m_sMethod + "=" + fv);
+            json_debug("[JSON]     Export value " + m_sMethod + "=" + fv);
             KeyValue.SetValue(floatToString(fv));
             if(fv!=0) empty = false;
 
@@ -720,7 +726,7 @@ class BBB_JsonMapMember
         {
             string sv;
             result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, sv);
-            BBB_Log.Log("[JSON]     Export value " + m_sMethod + "=" + sv);
+            json_debug("[JSON]     Export value " + m_sMethod + "=" + sv);
             KeyValue.SetValue(sv);
             if(sv!="") empty = false;
 
@@ -728,7 +734,7 @@ class BBB_JsonMapMember
         {
             bool bv;
             result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, bv);
-            BBB_Log.Log("[JSON]     Export value " + m_sMethod + "=" + bv);
+            json_debug("[JSON]     Export value " + m_sMethod + "=" + bv);
             KeyValue.SetValue(boolToString(bv));
             if(bv) empty = false;
 
@@ -736,15 +742,15 @@ class BBB_JsonMapMember
         {
             vector vv;
             result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, vv);
-            BBB_Log.Log("[JSON]     Export value " + m_sMethod + "=" + vv);
+            json_debug("[JSON]     Export value " + m_sMethod + "=" + vv);
             /*
             It's not our fault.
             float tre = 3710.810059;
-            BBB_Log.Log("[JSON] Export tre=" + tre);
-            BBB_Log.Log("[JSON] Export tre=" + floatToString(tre));
-            BBB_Log.Log("[JSON] Export tre=" + tre.ToString());
-            BBB_Log.Log("[JSON] Export tre=" + tre);
-            BBB_Log.Log("[JSON] Export tre=" + tre.ToString());
+            json_debug("[JSON] Export tre=" + tre);
+            json_debug("[JSON] Export tre=" + floatToString(tre));
+            json_debug("[JSON] Export tre=" + tre.ToString());
+            json_debug("[JSON] Export tre=" + tre);
+            json_debug("[JSON] Export tre=" + tre.ToString());
             */
             if(vv != vector.Zero) empty = false;
 
@@ -767,14 +773,14 @@ class BBB_JsonMapMember
                     activeNode.Insert(childKeyValue.GetKey(), childKeyValue);
                 }
             }
-            //BBB_Log.Log("[JSON] Export v=" + KeyValue.GetValue());
+            //json_debug("[JSON] Export v=" + KeyValue.GetValue());
 
         } else if(m_tOtype==void) {
 
             // Create an instance of our m_tOtype class we want to insert.
             Object newObj;
             result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, newObj);
-            // BBB_Log.Log("[JSON] Export create BBB_JsonKeyValueMap()");
+            // json_debug("[JSON] Export create BBB_JsonKeyValueMap()");
             // Call JSON_Export on it.
             BBB_JsonMap child;
             Class.CastTo(child,newObj);
@@ -783,16 +789,16 @@ class BBB_JsonMapMember
             /*
             foreach(string k, BBB_JsonKeyValue v: activeNode)
             {
-                BBB_Log.Log("[JSON]     v key=" + v.GetKey() + " value=" + v.GetValue());
+                json_debug("[JSON]     v key=" + v.GetKey() + " value=" + v.GetValue());
             }
             */
 
             empty = child.JSON_Export(activeNode, KeyValue, Create);
 
-            BBB_Log.Log("[JSON]     Export o " + m_sMethod + " array<" + m_tOtype + "> = " + newObj);
+            json_debug("[JSON]     Export o " + m_sMethod + " array<" + m_tOtype + "> = " + newObj);
 
         } else if(m_tCType==array && KeyValue.GetType()==array) {
-            BBB_Log.Log("[JSON]     Export o " + m_sMethod + " array<" + m_tCType + ">...");
+            json_debug("[JSON]     Export o " + m_sMethod + " array<" + m_tCType + ">...");
 
             // TODO: Fetch line numbers of old elements to try and replicate in 
             // new array...
@@ -812,7 +818,7 @@ class BBB_JsonMapMember
                     empty = false;
                 }
 
-                BBB_Log.Log("[JSON]     Export ai " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + intArray);
+                json_debug("[JSON]     Export ai " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + intArray);
 
             } else if(m_tOtype==float) {
 
@@ -824,7 +830,7 @@ class BBB_JsonMapMember
                     activeNode.Insert(newNode.GetKey(), newNode);
                     empty = false;
                 }
-                BBB_Log.Log("[JSON]     Export af " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + floatArray);
+                json_debug("[JSON]     Export af " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + floatArray);
 
             } else if(m_tOtype==string) {
 
@@ -836,7 +842,7 @@ class BBB_JsonMapMember
                     activeNode.Insert(newNode.GetKey(), newNode);
                     empty = false;
                 }
-                BBB_Log.Log("[JSON]     Export as " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + stringArray);
+                json_debug("[JSON]     Export as " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + stringArray);
 
             } else if(m_tOtype==bool) {
 
@@ -849,7 +855,7 @@ class BBB_JsonMapMember
                     activeNode.Insert(newNode.GetKey(), newNode);
                     empty = false;
                 }
-                BBB_Log.Log("[JSON]     Export ab " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + boolArray);
+                json_debug("[JSON]     Export ab " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + boolArray);
 
             } else if(m_tOtype==vector) {
 
@@ -863,21 +869,21 @@ class BBB_JsonMapMember
                     activeNode.Insert(newNode.GetKey(), newNode);
                     empty = false;
                 }
-                BBB_Log.Log("[JSON]     Export ab " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + vectorArray);
+                json_debug("[JSON]     Export ab " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + vectorArray);
 
             } else {
 
                 array<ref BBB_BarrelLocation> arrayPointer;
                 BBB_BarrelLocation obj;
                 result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, arrayPointer);
-                BBB_Log.Log("[JSON]     Export o result cnt=" + arrayPointer.Count() + " result=" + result + " " + m_cSelf + " " + m_sMethod + " " + obj);
+                json_debug("[JSON]     Export o result cnt=" + arrayPointer.Count() + " result=" + result + " " + m_cSelf + " " + m_sMethod + " " + obj);
                 //Class.CastTo(ap2, arrayPointer);
                 int idx = 0;
                 while(1)
                 {
                     obj = arrayPointer.Get(idx);
                     if(obj==null) break;
-                    BBB_Log.Log("[JSON]     Export ao result " + idx + " " + result + " " + m_cSelf + " " + m_sMethod + " " + obj);
+                    json_debug("[JSON]     Export ao result " + idx + " " + result + " " + m_cSelf + " " + m_sMethod + " " + obj);
                     idx += 1;
                     newNode = new BBB_JsonKeyValue("", "{", map , 0, activeNode.Count(), array);
                     activeNode.Insert(newNode.GetKey(), newNode);
@@ -888,14 +894,14 @@ class BBB_JsonMapMember
                     {
                         empty = false;
                     }
-                    BBB_Log.Log("[JSON]     HERE");
+                    json_debug("[JSON]     HERE");
                 }
             }
         }
 
         if(created && empty)
         {
-            BBB_Log.Log("[JSON]     EMPTY key " + KeyValue.GetKey());
+            json_debug("[JSON]     EMPTY key " + KeyValue.GetKey());
             pActiveNode.Remove(KeyValue.GetKey());
         }
 
@@ -906,24 +912,24 @@ class BBB_JsonMapMember
 	{
         BBB_JsonKeyValueMap activeNode;
         int result;
-        BBB_Log.Log("[JSON] key " + m_sJsonKey);
+        json_debug("[JSON] key " + m_sJsonKey);
         if(m_tCType==int && KeyValue.GetType()==int) //Type
         {
             result = EnScript.SetClassVar(m_cSelf, m_sMethod, 0, KeyValue.GetValueInt());
-			BBB_Log.Log("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValueInt());
+			json_debug("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValueInt());
         }
 		else if(m_tCType==float && KeyValue.GetType()==float) //Type
         {
             result = EnScript.SetClassVar(m_cSelf, m_sMethod, 0, KeyValue.GetValueFloat());
-			BBB_Log.Log("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValueFloat());
+			json_debug("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValueFloat());
         }
 		else if(m_tCType==string && KeyValue.GetType()==string) //Type
         {
             result = EnScript.SetClassVar(m_cSelf, m_sMethod, 0, KeyValue.GetValue());
-			BBB_Log.Log("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValue());
+			json_debug("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValue());
         } else if(m_tCType==bool) {
             result = EnScript.SetClassVar(m_cSelf, m_sMethod, 0, KeyValue.GetValueBool());
-			BBB_Log.Log("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValue());
+			json_debug("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValue());
         
         }
         else if(m_tCType==vector)
@@ -933,14 +939,14 @@ class BBB_JsonMapMember
             // JSON files. String case is simplest. 
             if(KeyValue.GetType()==string) {
                 result = EnScript.SetClassVar(m_cSelf, m_sMethod, 0, KeyValue.GetValueVector());
-                BBB_Log.Log("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValueVector());
+                json_debug("[JSON] Dynamic (" + result + ") " + m_tCType + " " + m_sJsonKey + "=" + KeyValue.GetValueVector());
             } else if(KeyValue.GetType()==array) {
                 activeNode = KeyValue.GetChildMap();
                 if(activeNode.Count()==3)
                 {
-                    BBB_Log.Log("[JSON] Dynamic vector[0]=" + activeNode.Get("0").GetValueFloat());
-                    BBB_Log.Log("[JSON] Dynamic vector[1]=" + activeNode.Get("1").GetValueFloat());
-                    BBB_Log.Log("[JSON] Dynamic vector[2]=" + activeNode.Get("2").GetValueFloat());
+                    json_debug("[JSON] Dynamic vector[0]=" + activeNode.Get("0").GetValueFloat());
+                    json_debug("[JSON] Dynamic vector[1]=" + activeNode.Get("1").GetValueFloat());
+                    json_debug("[JSON] Dynamic vector[2]=" + activeNode.Get("2").GetValueFloat());
                     vector vectorVector;
                     vectorVector[0] = activeNode.Get("0").GetValueFloat();
                     vectorVector[1] = activeNode.Get("1").GetValueFloat();
@@ -950,7 +956,7 @@ class BBB_JsonMapMember
                     
                     vector v;
                     result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, v);
-                    BBB_Log.Log("[JSON] Dynamic vector " + m_sJsonKey + "=" + v);
+                    json_debug("[JSON] Dynamic vector " + m_sJsonKey + "=" + v);
                 }
             }
         } 
@@ -963,7 +969,7 @@ class BBB_JsonMapMember
 
             result = EnScript.SetClassVar(m_cSelf, m_sMethod, 0, c);
 
-            BBB_Log.Log("[JSON] Dynamic 3 " + m_sMethod + " <" + m_tCType + "> = " + c);
+            json_debug("[JSON] Dynamic 3 " + m_sMethod + " <" + m_tCType + "> = " + c);
 
         }    
 		else if(m_tCType==array && KeyValue.GetType()==array) //Type
@@ -980,18 +986,18 @@ class BBB_JsonMapMember
                     array<int> intArray;
                     result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, intArray);
                     intArray.Insert(subKeyValue.GetValueInt());
-                    BBB_Log.Log("[JSON] Dynamic " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + intArray);
+                    json_debug("[JSON] Dynamic " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + intArray);
 
                 } else if (m_tOtype==float) {
                     array<float> floatArray;
                     result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, floatArray);
                     floatArray.Insert(subKeyValue.GetValueFloat());
-                    BBB_Log.Log("[JSON] Dynamic " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + floatArray);
+                    json_debug("[JSON] Dynamic " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + floatArray);
                 } else if (m_tOtype==string) {
                     array<string> stringArray;
                     result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, stringArray);
                     stringArray.Insert(subKeyValue.GetValue());
-                    BBB_Log.Log("[JSON] Dynamic " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + stringArray);
+                    json_debug("[JSON] Dynamic " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + stringArray);
                 } else if (m_tOtype==vector) {
                     array<vector> vectorArray;
                     result = EnScript.GetClassVar(m_cSelf, m_sMethod, 0, vectorArray);
@@ -1009,7 +1015,7 @@ class BBB_JsonMapMember
                             vectorArray.Insert(subVectorVector);
                         }
                     }
-                    BBB_Log.Log("[JSON] Dynamic v " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + vectorArray);
+                    json_debug("[JSON] Dynamic v " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + vectorArray);
                     
                 } else {
                     ref array<Object> objectArray;
@@ -1019,13 +1025,13 @@ class BBB_JsonMapMember
                     Object ao = m_tOtype.Spawn();
                     BBB_JsonMap ac;
                     //Class.CastTo(ao, m_tOtype.Spawn());
-                    BBB_Log.Log("[JSON] Dynamic o ao=" + ao);
+                    json_debug("[JSON] Dynamic o ao=" + ao);
                     Class.CastTo(ac, ao);
-                    BBB_Log.Log("[JSON] Dynamic o ac=" + ac + " ao=" + ao);
+                    json_debug("[JSON] Dynamic o ac=" + ac + " ao=" + ao);
                     ac.JSON_Import(subKeyValue.GetChildMap());
                     objectArray.Insert(ao);
 
-                    BBB_Log.Log("[JSON] Dynamic o " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + objectArray);
+                    json_debug("[JSON] Dynamic o " + m_sMethod + " array<" + m_tOtype + ">.insert()=" + objectArray);
 
                 }
             }
@@ -1035,13 +1041,13 @@ class BBB_JsonMapMember
             // TODO:
         }
         else {
-            BBB_Log.Log("[JSON] Unsupported type combo " + m_tCType + "<" + m_tOtype + "> " + m_sJsonKey);
+            json_debug("[JSON] Unsupported type combo " + m_tCType + "<" + m_tOtype + "> " + m_sJsonKey);
         }
 	}
 
     void BBB_JsonMapMember(Class self, string var, string jsonkey, typename type, typename oftype)
     {
-        BBB_Log.Log("[JSON] BBB_JsonMapMember " + self + " " + var + " " + jsonkey + " " + type + " " + oftype);
+        json_debug("[JSON] BBB_JsonMapMember " + self + " " + var + " " + jsonkey + " " + type + " " + oftype);
 
         m_cSelf = self;
         m_sMethod = var;
@@ -1060,7 +1066,7 @@ class BBB_JsonMap
     
     void BBB_JsonMap()
     {
-        BBB_Log.Log("[JSON] BBB_JsonMap()");
+        json_debug("[JSON] BBB_JsonMap()");
         m_mJSON_Members = new map<string, ref BBB_JsonMapMember>;
     }
 
@@ -1076,8 +1082,8 @@ class BBB_JsonMap
 
     bool JSON_Export(BBB_JsonKeyValueMap activeNode, BBB_JsonKeyValue parentKeyValue, bool Create)
     {	
-        BBB_Log.Log("[JSON] -------------------------------");
-        BBB_Log.Log("[JSON] Export " + m_mJSON_Members + " cnt=" + m_mJSON_Members.Count());
+        json_debug("[JSON] -------------------------------");
+        json_debug("[JSON] Export " + m_mJSON_Members + " cnt=" + m_mJSON_Members.Count());
 
         bool empty = true;
 

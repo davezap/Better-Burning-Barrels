@@ -74,6 +74,7 @@ class BBB_BarrelLocation: BBB_JsonMap
     private autoptr ref map<string, ref BBB_PlayerProximity> ProxPlayers;
     private int m_iMaxProximity = 0;  // the greatest radius to check if players are in.
     private bool m_bIgnite;
+    private bool m_bOut;
     
     //private Object m_OBarrel = null;
 
@@ -478,6 +479,15 @@ class BBB_BarrelLocation: BBB_JsonMap
 	//! \param d \p bool, false=out, true= should be burning.
     void SetIgnite(bool d) { 
         m_bIgnite = d;
+    }
+
+    bool isOut(bool d) { 
+        bool state_change = false;
+        if(m_bOut != d) {
+            state_change = true;
+        }
+        m_bOut = d;
+        return state_change;
     }
 
     //--------------------------------------------------------------------------

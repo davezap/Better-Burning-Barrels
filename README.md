@@ -30,7 +30,7 @@ It's probably easier to talk about the things Better Burning Barrels cannot do!
 
 It's been over a year and I'm back at it! Decided it was long overdue an update.
 
-Version 0.50 - 1 Jan 2025
+Version 0.50 - 4 Jan 2025
 - You can now add Fireplace's (aka campfire) see options for barrel type. 
   Somewhat breaking from the theme, a rebranding might be in order.
 - Fixed the VERY ANNOYING sound bug \o/ previous versions the barrel open or 
@@ -38,9 +38,12 @@ Version 0.50 - 1 Jan 2025
   open/closed state of the barrel) after lighting. These sounds will now 
   only play with player interaction and not on any other event.
 - Fixed ListModeParamA and ListModeParamB not working if the value was 1.
+- Fixed firewood not being replenished after fire goes out. This made fireplaces
+  without stone circles effectively disappear
 - JSON loader, I wrote a JSON parser to replace the DayZ one. You don't
   need to make any changes to your BBBConfig.json. The technical reasoning
   can be found at the top of BBB_Json.c for those who are interested.
+- Removed extraneous debugging from JSON loader.
 - Patched a 'NULL pointer to instance' where I was trying to get player info
   after logout. This happened when players skipped the countdown.
 - Also just a bunch of testing to ensure everything still working with the

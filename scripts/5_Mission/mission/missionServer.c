@@ -19,7 +19,7 @@ modded class MissionServer
 
 	void MissionServer()
 	{
-		BBB_Log.Log("DaveZ's Better Burning Barrels - Version 0.45");
+		BBB_Log.Log("DaveZ's Better Burning Barrels - Version 0.50");
 
 		LoadSettings();
 
@@ -271,7 +271,7 @@ modded class MissionServer
 				
 				
 				if (itemType=="Tripod") {
-					BBB_Log.LogEx("Adding Pot to Tripod")
+					BBB_Log.LogEx("Adding Pot to Tripod");
 					obj.GetInventory().CreateAttachment("Pot");
 				} else {
 					obj.SetQuantityMax();
@@ -511,7 +511,7 @@ modded class MissionServer
 				
 			}
 
-			if (m == 0) // Whoops!, we misplaced our barrel. Respawn it.
+			if (m == 0 || !BBB_Types.isSet) // Whoops!, we misplaced our barrel. Respawn it.
 			{
 				BBB_Log.LogEx("Barrel:" + bname + " - Found barrels:0");
 				Object obj = SpawnBBBObjects(barrelID, objectPos, barrelConfig.GetClassName());
@@ -524,15 +524,16 @@ modded class MissionServer
 
 				BBB_Types.InitCast(obj, barrelConfig.GetType());
 				
+				if(!BBB_Types.isSet) // fail-safe...
+				{
+					BBB_Log.LogEx("Barrel:" + bname + " - Failed to get our barrel at " + objectPos + " m=" + m);
+					continue;
+				}
+
 				ItemMaintenance(barrelConfig);
-				
 			}
 
-			if(!BBB_Types.isSet) // fail-safe...
-			{
-				BBB_Log.LogEx("Barrel:" + bname + " - Failed to get our barrel at " + objectPos);
-				continue;
-			}
+
 
 			////////////////////////////////////////////////////////////////////
 			// if for any reason our barrel is not marked, do it now.
@@ -581,7 +582,7 @@ modded class MissionServer
 
 			if(BBB_Types.base.IsBurning() && barrelConfig.GetIgnite() == false){
 
-				BBB_Log.Log("Barrel:"  + bname + " - Extinguish."); 
+				BBB_Log.Log("Barrel:"  + bname + " - Extinguish.");
 				array<EntityAI> subItemsExit = new array<EntityAI>;
 				BBB_Types.base.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, subItemsExit);
 				for (int i = 0; i < subItemsExit.Count(); i++)
@@ -593,6 +594,21 @@ modded class MissionServer
 					}
 				}
 
+			}
+			else if (!BBB_Types.base.IsBurning() && !BBB_Types.base.IsWet() && barrelConfig.GetIgnite() == false)
+			{
+				if(barrelConfig.isOut(true))
+				{
+					ItemMaintenance(barrelConfig);
+					BBB_Log.LogEx("Barrel:" + bname + " - Did Extinguish.");
+				}
+
+			}
+			else if (BBB_Types.base.IsBurning() && !BBB_Types.base.IsWet() && barrelConfig.GetIgnite() == true)
+			{
+				if(barrelConfig.isOut(false)) {
+					BBB_Log.LogEx("Barrel:" + bname + " - Did Relight ");
+				}
 			}
 			else if (!BBB_Types.base.IsBurning() && !BBB_Types.base.IsWet() && barrelConfig.GetIgnite() == true)
 			{
@@ -615,7 +631,6 @@ modded class MissionServer
 
 			if (BBB_Types.base.IsWet()) {
 				// dry it out.
-				//if(barrelID == 0) BBB_Log.LogEx("3 B " + BBB_Types.base.IsWet() + " O "+ BBB_Types.base.GetWetMin());
 				BBB_Types.base.SetWet(BBB_Types.base.GetWetMin());
 			}
 
