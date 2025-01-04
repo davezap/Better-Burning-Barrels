@@ -40,6 +40,8 @@ Version 0.50 - 4 Jan 2025
 - Fixed ListModeParamA and ListModeParamB not working if the value was 1.
 - Fixed firewood not being replenished after fire goes out. This made fireplaces
   without stone circles effectively disappear
+- Fixed bug where new barrels near lots of other objects would fail to spawn in
+  thanks to Daxst3e for reporting this.
 - JSON loader, I wrote a JSON parser to replace the DayZ one. You don't
   need to make any changes to your BBBConfig.json. The technical reasoning
   can be found at the top of BBB_Json.c for those who are interested.
