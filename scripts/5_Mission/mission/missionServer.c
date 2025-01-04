@@ -289,9 +289,11 @@ modded class MissionServer
 
 		if(BBB_Types.m_sType=="Fireplace")
 		{
+			if(barrelConfig.GetCircle()) {
+				baseItemTypes.Insert("Stone");
+			}
 			if (barrelConfig.GetTripod()) {
 				BBB_Log.LogEx("Barrel:" + bname + " - Adding tripod to fireplace");
-				baseItemTypes.Insert("Stone");
 				baseItemTypes.Insert("Tripod");
 			}
 		}
@@ -579,6 +581,11 @@ modded class MissionServer
 			// Ignite or Extinguish the fire.
 			//
 			//Print("[BBB] Barrel:"  + barrelID + " ignite " + ignite); 
+			if (BBB_Types.base.IsWet()) {
+				// dry it out.
+				BBB_Types.base.SetWet(BBB_Types.base.GetWetMin());
+			}
+			
 
 			if(BBB_Types.base.IsBurning() && barrelConfig.GetIgnite() == false){
 
@@ -629,10 +636,6 @@ modded class MissionServer
 				if(!rememberBarrelWasOpen) BBB_Types.OverrideOpenState(0);
 			}
 
-			if (BBB_Types.base.IsWet()) {
-				// dry it out.
-				BBB_Types.base.SetWet(BBB_Types.base.GetWetMin());
-			}
 
 			// BarrelHoles_ColorBase.c modded to add the lock/unlock functionality.
 			
