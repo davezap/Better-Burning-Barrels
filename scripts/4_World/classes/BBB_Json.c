@@ -460,17 +460,17 @@ class BBB_Json
         activeNode = new BBB_JsonKeyValueMap();
         newNode.SetChildMap(activeNode);
         
-        json_debug(lineNum + ": PUSH " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
+        json_debug(lineNum.ToString() + ": PUSH " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
     }
 
     private void Pop()
     {
-        json_debug(lineNum + ": POP " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
+        json_debug(lineNum.ToString() + ": POP " + containerStack.Get(containerStack.Count() - 1) + " " + docStack.Get(docStack.Count() - 1) + " | " + containerStack);
         if(docStack.Count() > 0) {
 
             activeNode = docStack.Get(docStack.Count() - 1);
             
-            json_debug(lineNum + " SetNoNewLine ? " + activeContainer.GetLineNumber() );
+            json_debug(lineNum.ToString() + " SetNoNewLine ? " + activeContainer.GetLineNumber() );
             if(activeContainer.GetLineNumber() == lineNum) 
             {
                 activeContainer.SetNoNewLine();
@@ -498,8 +498,8 @@ class BBB_Json
             activeContainer = null;
             state = 5;
         }
-        //json_debug(lineNum + ": Active Parent=" + activeContainer);
-        //json_debug(lineNum + ": cnt=" + activeNode.Count() + " keys=" + activeNode.GetKeyArray());                        
+        //json_debug(lineNum.ToString() + ": Active Parent=" + activeContainer);
+        //json_debug(lineNum.ToString() + ": cnt=" + activeNode.Count() + " keys=" + activeNode.GetKeyArray());                        
     }
 
     BBB_JsonKeyValueMap load(string filename)
@@ -533,13 +533,13 @@ class BBB_Json
                 tokenType = line.ParseStringEx(token);
                 if(tokenType==0 || tokenType==5) break;
 
-                json_debug(lineNum + ": state=" + state + " " + tokenType.ToString() + ":" + token + " activeNode " + activeNode);
+                json_debug(lineNum.ToString() + ": state=" + state + " " + tokenType.ToString() + ":" + token + " activeNode " + activeNode);
                 if(activeNode==null) {
                     // first token must be { our doc root.
                     if(tokenType==1 && token=="{") {
                         activeNode = docRoot;
                     } else {
-                        errorMessage = "line " + lineNum + ": Error expecting { to be first token";
+                        errorMessage = "line " + lineNum.ToString() + ": Error expecting { to be first token";
                         error = true;
                         break;
                     }
@@ -552,7 +552,7 @@ class BBB_Json
                         Pop();
                         continue;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting key but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting key but got " + token + " type=" + tokenType;
                         error = true;
                         break;                      
                     }
@@ -561,7 +561,7 @@ class BBB_Json
                     if(tokenType==1 && token==":") {
                         state = BBB_EJState.OPENBRACE_OPENBRACKET_VALUE;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting : but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting : but got " + token + " type=" + tokenType;
                         error = true;
                         break;                              
                     }
@@ -579,17 +579,17 @@ class BBB_Json
                         // push string or number
                         state = BBB_EJState.CLOSEBRACE_COMMA;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting value but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting value but got " + token + " type=" + tokenType;
                         error = true;
                         break;
                     }
 
                     newType = whatType(token, tokenType);
-                    //json_debug(lineNum + ": " + key + "=" + token);
+                    //json_debug(lineNum.ToString() + ": " + key + "=" + token);
                     newNode = new BBB_JsonKeyValue(key, token, newType, lineNum, activeNode.Count(), map);
                     if(activeNode.Contains(newNode.GetKey()))
                     {
-                       errorMessage = "line " + lineNum + ": replacing duplicate key \"" + newNode.GetKey() + "\""; 
+                       errorMessage = "line " + lineNum.ToString() + ": replacing duplicate key \"" + newNode.GetKey() + "\""; 
                        activeNode.Remove(newNode.GetKey());
                     }
 
@@ -612,7 +612,7 @@ class BBB_Json
                         // push string or number
                         state = BBB_EJState.CLOSEBRACKET_COMMA;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting value but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting value but got " + token + " type=" + tokenType;
                         error = true;
                         break;   
                     }
@@ -631,7 +631,7 @@ class BBB_Json
                     } else if(tokenType==1 && token==",") {
                         state = BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting , ] } but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting , ] } but got " + token + " type=" + tokenType;
                         error = true;
                         break;
                     }
@@ -643,7 +643,7 @@ class BBB_Json
                     } else if(tokenType==1 && token==",") {
                         state = BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting ] , but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting ] , but got " + token + " type=" + tokenType;
                         error = true;
                         break;
                     }
@@ -654,12 +654,12 @@ class BBB_Json
                     } else if(tokenType==1 && token==",") {
                         state = BBB_EJState.KEY_CLOSEBRACE;
                     } else {
-                        errorMessage = "line " + lineNum + ": Expecting , } but got " + token + " type=" + tokenType;
+                        errorMessage = "line " + lineNum.ToString() + ": Expecting , } but got " + token + " type=" + tokenType;
                         error = true;
                         break;
                     }
                 } else {
-                    errorMessage = "line " + lineNum + ": Bad state? got " + token + " type=" + tokenType;
+                    errorMessage = "line " + lineNum.ToString() + ": Bad state? got " + token + " type=" + tokenType;
                     error = true;
                     break; 
                 }
