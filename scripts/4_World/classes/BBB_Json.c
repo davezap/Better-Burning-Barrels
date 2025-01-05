@@ -53,10 +53,22 @@ class DaveZSettings
 
 // How to JSON : https://www.json.org/json-en.html
 
+const bool ENFORCE_KEY_CASE_SENSITIVE = false;
+
+string KeyToLower(string key) {
+    string copy = key + "";
+    if(!ENFORCE_KEY_CASE_SENSITIVE) copy.ToLower();
+    return copy;
+}
 
 void json_debug(string str)
 {
     //BBB_Log.Log(str);
+}
+
+void json_error(string str)
+{
+    BBB_Log.Log(str);
 }
 
 //! JSON Decode state machine states. Each state represents the next expected
@@ -64,18 +76,37 @@ void json_debug(string str)
 enum BBB_EJState
 {
     //! Expecting object key or }
-    KEY_CLOSEBRACKET,
+    KEY_CLOSEBRACE,
     //! Expecting : after key.
     COLON,
     //! Expecting { [ value after :
-    OPENBRACKET_OPENBRACE_VALUE,
+    OPENBRACE_OPENBRACKET_VALUE,
     //! Expecting } { [ or value after {
-    CLOSEBRACKET_OPENBRACKET_OPENBRACE_VALUE,
+    CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE,
     //! Expecting } or , after object value
+    CLOSEBRACE_COMMA,
+    //! Expecting } or , after array value
     CLOSEBRACKET_COMMA,
     //! Expecting ] or , after array value
-    CLOSEBRACE_COMMA
+    CLOSE_COMMA
+    //! Expecting ] } or , after value
 }
+
+string BBB_JsonStateName(BBB_EJState state)
+{
+    switch(state)
+    {
+        case BBB_EJState.KEY_CLOSEBRACE: return "}";
+        case BBB_EJState.COLON: return ":";
+        case BBB_EJState.OPENBRACE_OPENBRACKET_VALUE: return "{ [ or value";
+        case BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE: return "} { [ or value";
+        case BBB_EJState.CLOSEBRACE_COMMA: return "} or ,";
+        case BBB_EJState.CLOSEBRACKET_COMMA: return "] or ,";
+        case BBB_EJState.CLOSE_COMMA: return "} ] or ,";
+    }
+    return "";
+}
+
 
 //! A single JSON Key Value pair.
 class BBB_JsonKeyValue
@@ -116,7 +147,7 @@ class BBB_JsonKeyValue
     int GetLineNumber() { return m_iLineNumber; }
     void SetChildMap(BBB_JsonKeyValueMap child) { Child = child; }
     ref BBB_JsonKeyValueMap GetChildMap() { return Child; }
-    string GetKey() { return m_sKey; }
+    string GetKey() { return KeyToLower(m_sKey); }
     int GetIndex() { return m_iIndex; }
     string GetValue() { return m_sValue; }
     float GetValueFloat() { return m_sValue.ToFloat(); }
@@ -168,6 +199,7 @@ class BBB_Json
     private string token;
     private int tokenType;
     private bool error = false;
+    private string errorMessage = "";
     private string key;
     private int state = 0;
     private ref BBB_JsonKeyValueMap activeNode;
@@ -185,7 +217,14 @@ class BBB_Json
         return docRoot;
     }
 
-    void GetKeysSortedByLineNum(BBB_JsonKeyValueMap vm, out TStringArray keys)
+    bool getError() {return error;}
+    string getErrorMessage() {return errorMessage;}
+    private void resetError() {
+        error = false;
+        errorMessage = "";
+    }
+
+    private void GetKeysSortedByLineNum(BBB_JsonKeyValueMap vm, out TStringArray keys)
     { 
         foreach(string k, ref BBB_JsonKeyValue value: vm)
         {
@@ -203,7 +242,8 @@ class BBB_Json
 
     void dump(BBB_JsonKeyValueMap vm, int indent)
     {
-        
+        resetError();
+
         if(vm==null) vm = docRoot;
         string pad;
         for(int a=0; a < indent; a++)
@@ -342,6 +382,8 @@ class BBB_Json
     void save_dump(out string data, BBB_JsonKeyValueMap vm, int indent, out int lineNo)
     {
         
+        resetError();
+
         if(vm==null || vm.Count()==0) return;
         if(indent>100) return;
 
@@ -389,6 +431,8 @@ class BBB_Json
 
     void save(string filename)
     {
+        resetError();
+
         json_debug("[JSON] Save " + filename);
         lineNum = 0;
         string data = "{";
@@ -438,9 +482,11 @@ class BBB_Json
             {
                 if(activeContainer.GetType()==array)
                 {
-                    state=4;    // wait , ]
+                    //json_debug("[JSON] Parent is Array");
+                    state=BBB_EJState.CLOSE_COMMA;  // wait ] } ,
                 } else {
-                    state=5;    // wait , }
+                    //json_debug("[JSON] is Object");
+                    state=BBB_EJState.CLOSEBRACE_COMMA;    // wait } ,
                 }
             }
 
@@ -458,13 +504,14 @@ class BBB_Json
 
     BBB_JsonKeyValueMap load(string filename)
     {
+        resetError();
         FileHandle file_handle = OpenFile(filename, FileMode.READ);
         
         string line;
         error = false;
         lineNum = 0;
         key = "";
-        state = BBB_EJState.KEY_CLOSEBRACKET;
+        state = BBB_EJState.KEY_CLOSEBRACE;
         activeNode = null;
         activeContainer = null;
 
@@ -492,12 +539,12 @@ class BBB_Json
                     if(tokenType==1 && token=="{") {
                         activeNode = docRoot;
                     } else {
-                        //json_debug("[JSON] " + lineNum + ": Error expecting { to be first token");
+                        errorMessage = "[JSON] line " + lineNum + ": Error expecting { to be first token";
                         error = true;
                         break;
                     }
-                } else if(state==BBB_EJState.KEY_CLOSEBRACKET) {
-                    // We're expecting a string key
+                } else if(state==BBB_EJState.KEY_CLOSEBRACE) {
+                    // We're expecting a string key or } if this is an empty object
                     if(tokenType==2) {
                         key = token;
                         state = BBB_EJState.COLON;
@@ -505,34 +552,34 @@ class BBB_Json
                         Pop();
                         continue;
                     } else {
-                        //json_debug("[JSON] " + lineNum + ": Expecting key but got " + tokenType + ":" + token);
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting key but got " + token + " type=" + tokenType;
                         error = true;
                         break;                      
                     }
                 } else if(state==BBB_EJState.COLON) {   // :
                     // expecting : between 
                     if(tokenType==1 && token==":") {
-                        state = BBB_EJState.OPENBRACKET_OPENBRACE_VALUE;
+                        state = BBB_EJState.OPENBRACE_OPENBRACKET_VALUE;
                     } else {
-                        //json_debug("[JSON] " + lineNum + ": Expecting : but got " + tokenType + ":" + token);
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting : but got " + token + " type=" + tokenType;
                         error = true;
                         break;                              
                     }
 
-                } else if(state==BBB_EJState.OPENBRACKET_OPENBRACE_VALUE) {   // value
+                } else if(state==BBB_EJState.OPENBRACE_OPENBRACKET_VALUE) {   // value
 
                     // handle key/value pair.
                     if(tokenType==1 && token=="{") {
                         // start new child map type.
-                        state = BBB_EJState.KEY_CLOSEBRACKET;
+                        state = BBB_EJState.KEY_CLOSEBRACE;
                     } else if(tokenType==1 && token=="[") {
                         // start new child array type.
-                        state = BBB_EJState.CLOSEBRACKET_OPENBRACKET_OPENBRACE_VALUE;
+                        state = BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE;
                     } else if(tokenType==2 || tokenType==3 || tokenType==4) {
                         // push string or number
                         state = BBB_EJState.CLOSEBRACE_COMMA;
                     } else {
-                        json_debug("[JSON] " + lineNum + ": Expecting value but got " + tokenType + ":" + token);
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting value but got " + token + " type=" + tokenType;
                         error = true;
                         break;
                     }
@@ -542,14 +589,14 @@ class BBB_Json
                     newNode = new BBB_JsonKeyValue(key, token, newType, lineNum, activeNode.Count(), map);
                     if(activeNode.Contains(newNode.GetKey()))
                     {
-                       json_debug("[JSON] " + lineNum + ": replacing duplicate key \"" + newNode.GetKey() + "\""); 
+                       errorMessage = "[JSON] line " + lineNum + ": replacing duplicate key \"" + newNode.GetKey() + "\""; 
                        activeNode.Remove(newNode.GetKey());
                     }
 
                     activeNode.Insert(newNode.GetKey(), newNode);
                     if(tokenType==1) Push(newNode);
 
-                } else if(state==BBB_EJState.CLOSEBRACKET_OPENBRACKET_OPENBRACE_VALUE) {
+                } else if(state==BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE) {
 
                     if(tokenType==1 && token=="]") {
                         Pop();
@@ -557,15 +604,15 @@ class BBB_Json
 
                     } else if(tokenType==1 && token=="{") {
                         // start new child map type.
-                        state = BBB_EJState.KEY_CLOSEBRACKET;
+                        state = BBB_EJState.KEY_CLOSEBRACE;
                     } else if(tokenType==1 && token=="[") {
                         // start new child array type.
-                        state = BBB_EJState.CLOSEBRACKET_OPENBRACKET_OPENBRACE_VALUE;
+                        state = BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE;
                     } else if(tokenType==2 || tokenType==4) {
                         // push string or number
                         state = BBB_EJState.CLOSEBRACKET_COMMA;
                     } else {
-                        //json_debug("[JSON] " + lineNum + ": Expecting value but got " + tokenType + ":" + token);
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting value but got " + token + " type=" + tokenType;
                         error = true;
                         break;   
                     }
@@ -576,31 +623,43 @@ class BBB_Json
                     activeNode.Insert(newNode.GetKey(), newNode);
                     if(tokenType==1) Push(newNode);
                     
+                } else if(state==BBB_EJState.CLOSE_COMMA) {
+                    if(tokenType==1 && (token=="]" || token=="}")) {
+                        Pop();
+                        continue;
+
+                    } else if(tokenType==1 && token==",") {
+                        state = BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE;
+                    } else {
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting , ] } but got " + token + " type=" + tokenType;
+                        error = true;
+                        break;
+                    }
                 } else if(state==BBB_EJState.CLOSEBRACKET_COMMA) {
                     if(tokenType==1 && token=="]") {
                         Pop();
                         continue;
 
                     } else if(tokenType==1 && token==",") {
-                        state = BBB_EJState.CLOSEBRACKET_OPENBRACKET_OPENBRACE_VALUE;
+                        state = BBB_EJState.CLOSEBRACKET_OPENBRACE_OPENBRACKET_VALUE;
                     } else {
-                        //json_debug("[JSON] " + lineNum + ": Expecting , ] but got " + tokenType + ":" + token);
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting ] , but got " + token + " type=" + tokenType;
                         error = true;
-                        break;   
+                        break;
                     }
                 } else if(state==BBB_EJState.CLOSEBRACE_COMMA) {
                     if(tokenType==1 && token=="}") {
                         Pop();
                         continue;
                     } else if(tokenType==1 && token==",") {
-                        state = BBB_EJState.KEY_CLOSEBRACKET;
+                        state = BBB_EJState.KEY_CLOSEBRACE;
                     } else {
-                        //json_debug("[JSON] " + lineNum + ": Expecting , } but got " + tokenType + ":" + token);
+                        errorMessage = "[JSON] line " + lineNum + ": Expecting , } but got " + token + " type=" + tokenType;
                         error = true;
-                        break;   
+                        break;
                     }
                 } else {
-                    //json_debug("[JSON] " + lineNum + ": Bad state? got " + tokenType + ":" + token);
+                    errorMessage = "[JSON] line " + lineNum + ": Bad state? got " + token + " type=" + tokenType;
                     error = true;
                     break; 
                 }
@@ -608,6 +667,10 @@ class BBB_Json
             }
         }
         
+        if (error) {
+            json_error(errorMessage);
+        }
+
         CloseFile(file_handle);
         return docRoot;
     }
@@ -1072,6 +1135,8 @@ class BBB_JsonMap
 
     void JSON_Import(BBB_JsonKeyValueMap activeNode)
     {
+        json_debug("[JSON] -------------------------------");
+        json_debug("[JSON] Import " + m_mJSON_Members + " cnt=" + m_mJSON_Members.Count());
         foreach(string k, BBB_JsonMapMember v: m_mJSON_Members)
         {
              // TODO: optional case insensitivity
@@ -1097,16 +1162,12 @@ class BBB_JsonMap
     void JSON_MapAdd(Class self, string var, string jsonkey, typename type, typename oftype)
     {
         BBB_JsonMapMember value = new BBB_JsonMapMember(self, var, jsonkey, type, oftype);
-        jsonkey = value.m_sJsonKey;
-        //jsonkey.ToLower();
-        m_mJSON_Members.Set(jsonkey, value);
+        m_mJSON_Members.Set(KeyToLower(value.m_sJsonKey), value);
     }
 
     ref BBB_JsonMapMember JSON_MapGet(string JSONkey)
     {
-        JSONkey.ToLower();
-        return m_mJSON_Members.Get(JSONkey);
+        return m_mJSON_Members.Get(KeyToLower(JSONkey));
     }
-
 
 }

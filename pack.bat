@@ -18,7 +18,7 @@ rd /S /Q %tmpfolder%\bbb
 mkdir %tmpfolder%\bbb
 echo Syncing folders... [source]=P:\BBB, [sync]=%tmpfolder%\bbb
 :: My project only has .c files.
-xcopy /S /C /Q /Y "P:\BBB\*.c" "C:\Users\David\AppData\Local\Temp\bbb\*.c"
+xcopy /S /C /Q /Y /exclude:P:\BBB\pack_exclude.lst "P:\BBB\*.c" "C:\Users\David\AppData\Local\Temp\bbb\*.c"
 ::Other types might include *.emat;*.edds;*.ptc;*.c;*.imageset;*.layout;*.ogg;*.png;*.paa;*.rvmat;*.wrp
 
 "C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\bin\CfgConvert\CfgConvert.exe" -bin -dst "%tmpfolder%\bbb\scripts\config.bin" "P:\BBB\scripts\config.cpp"

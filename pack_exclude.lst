@@ -41,3 +41,7 @@ Doc\*.*
 *.bisign
 *.bikey
 *.biprivatekey
+
+
+; Our stuff
+release

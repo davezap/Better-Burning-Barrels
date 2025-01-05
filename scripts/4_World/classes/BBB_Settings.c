@@ -25,9 +25,9 @@ class BBB_Settings: BBB_JsonMap
     private string Version = "";
     private ref array<ref BBB_BarrelLocation> BarrelLocations;
 	ref BBB_BarrelLocation BarrelLocation;
-	private int PlayerReportTime;	// Deprecated - Keep to preserve backward compatability, removed V0.3
+	private int PlayerReportTime;	// Deprecated - Keep to preserve backward compatibility, removed V0.3
 	private int BarrelUpdateTime;	// How frequently to test barrels.
-	private int ProximityTimeout;	// Deprecated - Keep to preserve backward compatability, removed V0.3
+	private int ProximityTimeout;	// Deprecated - Keep to preserve backward compatibility, removed V0.3
 	private int DebugBarrels;
 	private int DebugWeather;
 	private int DebugYAY;
@@ -156,7 +156,11 @@ class BBB_Settings: BBB_JsonMap
 			BBB_Json json = new BBB_Json();
 			BBB_Log.Log("Reading " + BBB_CONFIG);
 			json.load(BBB_CONFIG);
-			//BBB_Log.Log("Post json.load dump...");
+			if(json.getError())
+			{
+				BBB_Log.Log("*** There were errors reading " + BBB_CONFIG + " but we're going to continue all the same.");
+			}
+			
 			json.dump(null, 0);
 
     		settings.JSON_Import(json.GetDocRoot());
