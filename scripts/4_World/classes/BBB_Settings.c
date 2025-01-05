@@ -12,7 +12,7 @@
 //!
 //! Loads config and enables adding of the Barrels.
 
-const string BBB_CURRENT_VERSION = "0.50";
+const string BBB_CURRENT_VERSION = "0.51";
 const string DAVEZ_CONFIG_ROOT_SERVER = "$profile:DaveZ\\";
 const string BBB_CONFIG = DAVEZ_CONFIG_ROOT_SERVER + "BBBConfig.json";
 

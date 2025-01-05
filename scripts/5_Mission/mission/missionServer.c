@@ -19,7 +19,7 @@ modded class MissionServer
 
 	void MissionServer()
 	{
-		BBB_Log.Log("DaveZ's Better Burning Barrels - Version 0.50");
+		BBB_Log.Log("DaveZ's Better Burning Barrels - Version 0.51");
 
 		LoadSettings();
 

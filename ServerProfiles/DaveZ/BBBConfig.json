@@ -1,5 +1,5 @@
 {
-    "Version": "0.50",
+    "Version": "0.51",
 	"BarrelUpdateTime": 1,
 	"DebugBarrels": 0,
 	"DebugWeather": 600,
@@ -27,7 +27,7 @@
             "position": [12069.923828, 3.078028, 3454.740234]
 		},
 		{
-			"Name":"Daxst3e's Barrel",
+			"Name":"Daxst3r's Barrel",
 			"OnPlayerProximity": 100,
 			"OnDuringNight": 1,
 			"Open": 1,

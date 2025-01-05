@@ -30,6 +30,11 @@ It's probably easier to talk about the things Better Burning Barrels cannot do!
 
 It's been over a year and I'm back at it! Decided it was long overdue an update.
 
+Version 0.51 - 5 Jan 2025
+- JSON object keys are now case insensitive.
+- Default Json config includes Daxst3r's Barrel
+
+
 Version 0.50 - 4 Jan 2025
 - You can now add Fireplace's (aka campfire) see options for barrel type. 
   Somewhat breaking from the theme, a rebranding might be in order.
@@ -41,7 +46,7 @@ Version 0.50 - 4 Jan 2025
 - Fixed firewood not being replenished after fire goes out. This made fireplaces
   without stone circles effectively disappear
 - Fixed bug where new barrels near lots of other objects would fail to spawn in
-  thanks to Daxst3e for reporting this.
+  thanks to Daxst3r for reporting this.
 - JSON loader, I wrote a JSON parser to replace the DayZ one. You don't
   need to make any changes to your BBBConfig.json. The technical reasoning
   can be found at the top of BBB_Json.c for those who are interested.
@@ -382,7 +387,7 @@ Note: our new showroom is located in the big shed in Kamyshovo!
 
 ```
 {
-    "Version": "0.50",
+  "Version": "0.51",
 	"BarrelUpdateTime": 1,
 	"DebugBarrels": 0,
 	"DebugWeather": 600,
@@ -410,7 +415,7 @@ Note: our new showroom is located in the big shed in Kamyshovo!
             "position": [12069.923828, 3.078028, 3454.740234]
 		},
 		{
-			"Name":"Daxst3e's Barrel",
+			"Name":"Daxst3r's Barrel",
 			"OnPlayerProximity": 100,
 			"OnDuringNight": 1,
 			"Open": 1,

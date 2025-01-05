@@ -9,7 +9,7 @@ DemonstratesShows how
 Given this setup we will move the barrel between two locations when the player
 is within OnPlayerProximity meters of the barrel.
 {
-    "Version": "0.4",
+    "Version": "0.5",
     "BarrelLocations": [
         {
 			"OnPlayerProximity":2,
