@@ -30,10 +30,16 @@ It's probably easier to talk about the things Better Burning Barrels cannot do!
 
 It's been over a year and I'm back at it! Decided it was long overdue an update.
 
+Version 0.52 - 10 Jan 2025
+- New option 'NoPain' prevents players taking damage from fires.
+- New option 'ExtinguishMethod' allows barrels to go out imidiately, naturally,
+  or after some time.
+- new script method BBB_EH::GetServerTime() returns server unix timestamp.
+- Minor internal stuff like version number constant usage.
+
 Version 0.51 - 5 Jan 2025
 - JSON object keys are now case insensitive.
 - Default Json config includes Daxst3r's Barrel
-
 
 Version 0.50 - 4 Jan 2025
 - You can now add Fireplace's (aka campfire) see options for barrel type. 
@@ -180,6 +186,22 @@ surface snapping.
 ### LogPlayerProximity [whole meters, 0 is default and disabled]
 Additionally record information about players proximity to this specific 
 barrel. This is independent from OnPlayerProximity
+
+
+### ExtinguishMethod [whole number, various options]
+When a fire enters the "should extinguish" state, how and when it actually goes
+out is determined by this parameter.
+- =0: Combustible items are immediately removed, putting the fire out.
+- >=1: The fire will be maintained and lit for this many seconds, and then the
+  behavior is as 0.
+- =-1: The fire will stop being maintained, meaning it will burn out naturally
+In all cases an extinguished fire is restocked with new combustible materials 
+ready for the next relight. If a relight event is received for the fire it 
+will override the timers.
+
+### NoPain [ bool true or false (default)]
+Fire hot, fire burns! But it does not have to be that way, just set NoPain
+to true and you can snuggle up really close without the usual ill effects.
 
 
 <!-- ----------------------------------------------------------------------- -->

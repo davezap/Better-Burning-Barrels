@@ -1,3 +1,5 @@
+
+
 class BBB_Type<Class T>
 {
     autoptr ref FireplaceBase base = null;
@@ -141,5 +143,11 @@ class BBB_Types
     static void SetCircle(bool state)
     {
         if(ourFireplace) ourFireplace.SetCircle(state);
+    }
+
+    static void DisableDamage(bool state)
+    {
+        if(ourBarrelHoles) ourBarrelHoles.DisableDamage(state);
+        if(ourFireplace) ourFireplace.DisableDamage(state);
     }
 }

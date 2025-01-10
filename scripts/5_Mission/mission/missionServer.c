@@ -19,7 +19,7 @@ modded class MissionServer
 
 	void MissionServer()
 	{
-		BBB_Log.Log("DaveZ's Better Burning Barrels - Version 0.51");
+		BBB_Log.Log("DaveZ's Better Burning Barrels - Version " + BBB_CURRENT_VERSION);
 
 		LoadSettings();
 
@@ -187,10 +187,14 @@ modded class MissionServer
 		m_Settings = BBB_Settings._Load();
 	}
 
+
 	private Object SpawnBBBObjects(int barrelID, vector objectPos, string objectType)
 	{
 		// Orientation test
 		// Object obj = GetGame().CreateObjectEx( objectType, objectPos, 0, RF_FRONT );
+		if(barrelID==1){
+			Object bear = GetGame().CreateObject( "Animal_UrsusArctos", objectPos, false, true, true );
+		}
 		Object obj = GetGame().CreateObject( objectType, objectPos, false, false, true );
 		if(obj==null) return null;
 
@@ -275,6 +279,7 @@ modded class MissionServer
 					obj.GetInventory().CreateAttachment("Pot");
 				} else {
 					obj.SetQuantityMax();
+					//obj.SetQuantityToMinimum();
 				}
 				
 			}
@@ -521,7 +526,7 @@ modded class MissionServer
 				if(obj==null)
 				{
 					BBB_Log.LogEx("Barrel:" + bname + " - Failed to spawn in barrel at " + objectPos);
-					return;
+					continue;
 				}
 
 				BBB_Types.InitCast(obj, barrelConfig.GetType());
@@ -531,7 +536,7 @@ modded class MissionServer
 					BBB_Log.LogEx("Barrel:" + bname + " - Failed to get our barrel at " + objectPos + " m=" + m);
 					continue;
 				}
-
+				BBB_Types.DisableDamage(barrelConfig.GetNoPain());
 				ItemMaintenance(barrelConfig);
 			}
 
@@ -587,25 +592,32 @@ modded class MissionServer
 			}
 			
 
-			if(BBB_Types.base.IsBurning() && barrelConfig.GetIgnite() == false){
-
-				BBB_Log.Log("Barrel:"  + bname + " - Extinguish.");
-				array<EntityAI> subItemsExit = new array<EntityAI>;
-				BBB_Types.base.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, subItemsExit);
-				for (int i = 0; i < subItemsExit.Count(); i++)
+			if(BBB_Types.base.IsBurning() && barrelConfig.GetIgnite() == false)
+			{
+				if(barrelConfig.ExtinguishCheckStartTimer())
 				{
-					ItemBase item = ItemBase.Cast( subItemsExit.Get(i) );
-					if(BBB_Types.IsKindling( item ) || BBB_Types.IsFuel( item )) //subItemsExit.Get(i) != ourBarrelHoles
-					{
-						BBB_Types.base.GetInventory().LocalDestroyEntity(subItemsExit.Get(i));
-					}
+					BBB_Log.LogEx("Barrel:" + bname + " - Will Extinguish After Timeout.");
 				}
 
+				if (barrelConfig.GetExtinguishMethod() == 0 || barrelConfig.ExtinguishTimeout()) {
+					BBB_Log.Log("Barrel:"  + bname + " - Extinguish.");
+					array<EntityAI> subItemsExit = new array<EntityAI>;
+					BBB_Types.base.GetInventory().EnumerateInventory(InventoryTraversalType.INORDER, subItemsExit);
+					for (int i = 0; i < subItemsExit.Count(); i++)
+					{
+						ItemBase item = ItemBase.Cast( subItemsExit.Get(i) );
+						if(BBB_Types.IsKindling( item ) || BBB_Types.IsFuel( item )) //subItemsExit.Get(i) != ourBarrelHoles
+						{
+							BBB_Types.base.GetInventory().LocalDestroyEntity(subItemsExit.Get(i));
+						}
+					}
+				}
 			}
 			else if (!BBB_Types.base.IsBurning() && !BBB_Types.base.IsWet() && barrelConfig.GetIgnite() == false)
 			{
 				if(barrelConfig.isOut(true))
 				{
+					barrelConfig.ExtinguishStopTimer();
 					ItemMaintenance(barrelConfig);
 					BBB_Log.LogEx("Barrel:" + bname + " - Did Extinguish.");
 				}
@@ -619,6 +631,7 @@ modded class MissionServer
 			}
 			else if (!BBB_Types.base.IsBurning() && !BBB_Types.base.IsWet() && barrelConfig.GetIgnite() == true)
 			{
+
 				// Closed barrels cannot be filled with fule so open it while we do this.
 				bool rememberBarrelWasOpen = BBB_Types.base.IsOpen();
 				if(!rememberBarrelWasOpen) BBB_Types.OverrideOpenState(1);
@@ -627,6 +640,7 @@ modded class MissionServer
 				BBB_Log.Log("Barrel:"  + bname + " - Relight.");
 				//BBreak = true;
 				
+				barrelConfig.ExtinguishStopTimer();
 				ItemMaintenance(barrelConfig);
 
 				EntityAI source;

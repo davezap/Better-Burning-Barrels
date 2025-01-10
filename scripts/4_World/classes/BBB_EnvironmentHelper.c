@@ -416,6 +416,24 @@ class BBB_EnvironmentHelper
     }
     
     /**
+    \brief Returns server time as Unix timestamp
+        \return \p int Unix timestamp
+        @code
+            int epoch = BBB_EH.GetServerTime();
+
+            >> epoch = 1689866610
+        @endcode
+    */
+    static int GetServerTime()
+    {
+        int year, month, day, hour, min, sec; 
+        GetHourMinuteSecondUTC(hour, min, sec); 
+        GetYearMonthDay(year, month, day);
+        return IntsToUnix(year, month, day, hour, min, sec);
+    }
+
+
+    /**
     \brief Returns world Sunrise time as DayZ time float.
         \return \p float DayZ time.
         @code

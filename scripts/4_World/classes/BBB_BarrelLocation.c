@@ -59,8 +59,10 @@ class BBB_BarrelLocation: BBB_JsonMap
     private int DontSnapToGround = 0;
     private string Colour = "";
     private string Color = "";
-    private bool m_bTripod = false;
-    private bool m_bCircle = false;
+    private bool ATripod = false;
+    private bool AStoneCircle = false;
+    private int ExtinguishMethod = 0;
+    private bool NoPain = false;
     // End of Config members // 
 
     private int m_iID = -1;
@@ -75,7 +77,7 @@ class BBB_BarrelLocation: BBB_JsonMap
     private int m_iMaxProximity = 0;  // the greatest radius to check if players are in.
     private bool m_bIgnite;
     private bool m_bOut;
-    
+    private int m_extinguish_timer = 0;
     //private Object m_OBarrel = null;
 
     //--------------------------------------------------------------------------
@@ -113,8 +115,12 @@ class BBB_BarrelLocation: BBB_JsonMap
 
         JSON_MapAdd(this, "Colour", "Colour", string, void);
         
-        JSON_MapAdd(this, "m_bTripod", "Tripod", bool, void);
-        JSON_MapAdd(this, "m_bCircle", "Circle", bool, void);
+        JSON_MapAdd(this, "ATripod", "Tripod", bool, void);
+        JSON_MapAdd(this, "AStoneCircle", "Circle", bool, void);
+        JSON_MapAdd(this, "ExtinguishMethod", "ExtinguishMethod", int, void);
+
+        JSON_MapAdd(this, "NoPain", "NoPain", bool, void);
+
 
 
         m_iID = -1;
@@ -443,11 +449,33 @@ class BBB_BarrelLocation: BBB_JsonMap
     // Just like feet and pounds, we're really just faking it ;)
     void SetColor(string color) { SetColour(color); }
 
-    void SetTripod(bool state) {m_bTripod = state;}
-    bool GetTripod() { return m_bTripod;} 
+    void SetTripod(bool state) {ATripod = state;}
+    bool GetTripod() { return ATripod;} 
 
-    void SetCircle(bool state) {m_bCircle = state;}
-    bool GetCircle() { return m_bCircle;} 
+    void SetCircle(bool state) {AStoneCircle = state;}
+    bool GetCircle() { return AStoneCircle;} 
+
+    void SetExtinguishMethod(bool state) {ExtinguishMethod = state;}
+    bool GetExtinguishMethod() { return ExtinguishMethod;} 
+    bool ExtinguishCheckStartTimer() {
+        if (m_extinguish_timer == 0 && ExtinguishMethod > 0) {
+            m_extinguish_timer = BBB_EH.GetServerTime() + ExtinguishMethod;
+            return true;
+        }
+        return false;
+    }
+    void ExtinguishStopTimer() {
+         m_extinguish_timer = 0;
+    }
+    bool ExtinguishTimeout () {
+        if (m_extinguish_timer==0) return false;
+        bool timeout = BBB_EH.GetServerTime() >= m_extinguish_timer;
+        if (timeout) m_extinguish_timer = 0;
+        return timeout;
+    }
+
+    bool GetNoPain() {return NoPain;}
+    void SetNoPain(bool pain) {NoPain = pain;}
     // End of Config Setters and Getters.
     ////////////////////////////////////////////////////////////////////////////
 

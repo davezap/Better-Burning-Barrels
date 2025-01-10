@@ -13,6 +13,7 @@ modded class BarrelHoles_ColorBase
 	private bool m_bIsLocked = false;
 	private autoptr ref Timer BarrelOpener;
     private bool m_bBetterBurningBarrel = false;
+    private bool m_bPleaseNoHurty = false;
 
     //// Constructor ///////////////////////////////////////////////////////////
 
@@ -59,6 +60,14 @@ modded class BarrelHoles_ColorBase
 		return super.CanExtinguishFire();
 	}
 
+    override void CreateAreaDamage()
+    {
+        if(m_bPleaseNoHurty) {
+            DestroyAreaDamage();
+        } else {
+            super.CreateAreaDamage();
+        }
+    }
 
     //// Our Stuff /////////////////////////////////////////////////////////////
 
@@ -104,5 +113,10 @@ modded class BarrelHoles_ColorBase
 	{
 		m_bIsLocked = false;
 	}
+
+    void DisableDamage(bool damage)
+    {
+        m_bPleaseNoHurty = damage;
+    }
 
 }

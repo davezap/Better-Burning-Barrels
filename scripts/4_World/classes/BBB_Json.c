@@ -52,18 +52,18 @@ class DaveZSettings
 */
 
 // How to JSON : https://www.json.org/json-en.html
-
-const bool ENFORCE_KEY_CASE_SENSITIVE = false;
+const bool BBB_JSON_DEBUG = true;
+const bool BBB_JSON_ENFORCE_KEY_CASE_SENSITIVE = false;
 
 string KeyToLower(string key) {
     string copy = key + "";
-    if(!ENFORCE_KEY_CASE_SENSITIVE) copy.ToLower();
+    if(!BBB_JSON_ENFORCE_KEY_CASE_SENSITIVE) copy.ToLower();
     return copy;
 }
 
 void json_debug(string str)
 {
-    //BBB_Log.Log("[JSON]" + str);
+    if(BBB_JSON_DEBUG) BBB_Log.Log("[JSON]" + str);
 }
 
 void json_error(string str)
