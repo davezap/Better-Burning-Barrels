@@ -5,54 +5,12 @@
 //  specify all class(s) and class members in advance. Your JSON had better
 //  match this or there will be trouble! This created problems if I wanted
 //  change/delete things. The work around is usually to check the json file 
-//  version and upgrade it accordingly. But for me this was anoying. JSON is not
+//  version and upgrade it accordingly. But for me this was annoying. JSON is not
 //  XML, I really think it should only be used as a data store, not as a way
-//  to serialise objects. Maybe I'm the only one who feels that way?
+//  to serialize objects. Maybe I'm the only one who feels that way?
 // 
-// Anyway the example old (usual) way for context looks like this.
-/*
-class DaveZSettings
-{
-    string Version = "";
-    autoptr ref array<ref BarrelLocation> BarrelLocations;
-	int PlayerReportTime;	// Deprecated - Keep to preserve backward compatability, removed V0.3
-	int BarrelUpdateTime;	// How frequently to test barrels.
-	int ProximityTimeout;  // Deprecated - Keep to preserve backward compatability, removed V0.3
-	int DebugBarrels;
-	int DebugWeather;
-	int DebugYAY;
 
-    void DaveZSettings() {
-        // above public variables and this one class and recursively down the tubes...
-        BarrelLocations = new array<ref BarrelLocation>;
-    }
-
-    void DaveZSettingsDefault()
-    {   
-        // Green mountain next to radio tower door.
-        BarrelLocations.Insert(new BarrelLocation("3709.77 401.978 5993.01"));
-    }
-
-    static ref DaveZSettings Load()	{
-		DaveZSettings settings = new DaveZSettings();
-
-		if ( !FileExist( DAVEZ_CONFIG_ROOT_SERVER ) )
-    		MakeDirectory( DAVEZ_CONFIG_ROOT_SERVER );
-	
-		if (FileExist(DAVEZ_CONFIG)) {
-			JsonFileLoader<DaveZSettings>.JsonLoadFile(DAVEZ_CONFIG, settings);
-        } else {}
-            BBBLog.Log("Could not find ServerProfiles/DaveZ/BBBConfig.json, Loading Default barrel at Green Mountain.");
-			settings.DaveZSettingsDefault();
-		}
-
-		return settings;
-	}
-}
-*/
-
-// How to JSON : https://www.json.org/json-en.html
-const bool BBB_JSON_DEBUG = true;
+const bool BBB_JSON_DEBUG = false;
 const bool BBB_JSON_ENFORCE_KEY_CASE_SENSITIVE = false;
 
 string KeyToLower(string key) {

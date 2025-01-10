@@ -1,52 +1,66 @@
-@echo on
+:: Packing script peepers our mod for publishing to the steam store or for
+:: local testing.
+::
+:: NOTE: This does not binarize and only handles .c files currently.
+::
+
+@echo off
 setlocal enableDelayedExpansion
 
 :start
 set modname="Better Burning Barrels"
 
-set tmpfolder=%TMP%
 :: This would be bad.
-IF "%tmpfolder%"=="" GOTO :error
-IF "%tmpfolder%"=="""" GOTO :error
+IF "%TMP%"=="" GOTO :error
+IF "%TMP%"=="""" GOTO :error
+set tmpfolder=%TMP%\BBB
+set DayZtools=C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\bin
+::set app_binarizer="%DayZtools%\Binarize\binarize.exe"
+
+set ProjectDir=P:\BBB
+set ExcludeLst=P:\BBB\pack_exclude.lst
+set PrivateKey=P:\Mods\@DaveZ\keys\DaveZ.biprivatekey
+set PublicKey=P:\Mods\@DaveZ\keys\DaveZ.bikey
+:: !! Warning: Everything in here will be nuked.
+set ReleaseDir=P:\BBB\release
 
 
-set app_binarizer="C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\bin\Binarize\binarize.exe"
+echo Clearing temp folder : %tmpfolder%
 
-echo Clearing temp folder.
-
-rd /S /Q %tmpfolder%\bbb
-mkdir %tmpfolder%\bbb
-echo Syncing folders... [source]=P:\BBB, [sync]=%tmpfolder%\bbb
+rd /S /Q %tmpfolder%
+mkdir %tmpfolder%
+echo Copying "%ProjectDir%\*.c" "%tmpfolder%\*.c"
 :: My project only has .c files.
-xcopy /S /C /Q /Y /exclude:P:\BBB\pack_exclude.lst "P:\BBB\*.c" "C:\Users\David\AppData\Local\Temp\bbb\*.c"
+xcopy /S /C /Q /Y /exclude:%ExcludeLst% "%ProjectDir%\*.c" "%tmpfolder%\*.c"
 ::Other types might include *.emat;*.edds;*.ptc;*.c;*.imageset;*.layout;*.ogg;*.png;*.paa;*.rvmat;*.wrp
 
-"C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\bin\CfgConvert\CfgConvert.exe" -bin -dst "%tmpfolder%\bbb\scripts\config.bin" "P:\BBB\scripts\config.cpp"
+echo CfgConvert
+"%DayZtools%\CfgConvert\CfgConvert.exe" -bin -dst "%tmpfolder%\scripts\config.bin" "%ProjectDir%\scripts\config.cpp"
 
 :: there is nothing to binarize
 
 echo FileBank
+"%DayZtools%\PboUtils\FileBank.exe" -exclude "%ExcludeLst%" -property "product=dayz ugc" -property "prefix=BBB" -dst "%TMP%" "%tmpfolder%" || goto :error
 
-"C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\bin\PboUtils\FileBank.exe" -exclude "P:\BBB\pack_exclude.lst" -property "product=dayz ugc" -property prefix=BBB -dst "%tmpfolder%" "%tmpfolder%\bbb" || goto :error
-
-echo build release directory.
-
-rd /S /Q P:\BBB\release
-mkdir P:\BBB\release
-mkdir P:\BBB\release\keys
-mkdir P:\BBB\release\addons
-copy "P:\BBB\README.md" "P:\BBB\release\" || goto :error
-copy "P:\Mods\@DaveZ\keys\DaveZ.bikey" "P:\BBB\release\keys\" || goto :error
-xcopy /S /C /Q /Y "P:\BBB\ServerProfiles\" "P:\BBB\release\ServerProfiles\"
-
-copy "%tmpfolder%\BBB.pbo" "P:\BBB\release\addons\BBB.pbo" || goto :error
+echo Building release directory.
+rd /S /Q %ReleaseDir%
+mkdir %ReleaseDir%
+mkdir %ReleaseDir%\keys
+mkdir %ReleaseDir%\addons
+copy "%ProjectDir%\README.md" "%ReleaseDir%\" || goto :error
+copy "%PublicKey%" "%ReleaseDir%\keys\" || goto :error
+xcopy /S /C /Q /Y "%ProjectDir%\ServerProfiles\" "%ReleaseDir%\ServerProfiles\"
+copy "%TMP%\BBB.pbo" "%ReleaseDir%\addons\BBB.pbo" || goto :error
 
 :: Sign file.
-"C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools\Bin\DsUtils\DSSignFile.exe" "P:\Mods\@DaveZ\keys\DaveZ.biprivatekey" "P:\BBB\release\addons\BBB.pbo" || goto :error
+echo Signing PBO
+"%DayZtools%\DsUtils\DSSignFile.exe" "%PrivateKey%" "%ReleaseDir%\addons\BBB.pbo" || goto :error
 
+echo Packing Complete.
 goto fin
 
 :error
-echo "Something happened! ¯\_(ツ)_/¯"
-
+echo "Something happened while packing! ¯\_(ツ)_/¯"
+pause
+exit -1073741510
 :fin

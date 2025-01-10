@@ -64,9 +64,7 @@ Version 0.50 - 4 Jan 2025
 
 See end of this document for previous change history.
 
-NOTE: These release versions apply to the DayZ workshop, the github repo will 
-have the latest (beta) features & patches that won't be documented here till
-the next release.
+NOTE: The DayZ workshop version may be several versions behind the git repo.
 
 <!-- ----------------------------------------------------------------------- -->
 # HOW TO INSTALL

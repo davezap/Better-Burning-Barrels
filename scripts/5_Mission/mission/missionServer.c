@@ -192,9 +192,9 @@ modded class MissionServer
 	{
 		// Orientation test
 		// Object obj = GetGame().CreateObjectEx( objectType, objectPos, 0, RF_FRONT );
-		if(barrelID==1){
-			Object bear = GetGame().CreateObject( "Animal_UrsusArctos", objectPos, false, true, true );
-		}
+		//if(barrelID==1){
+		//  Object bear = GetGame().CreateObject( "Animal_UrsusArctos", objectPos, false, true, true );
+		//}
 		Object obj = GetGame().CreateObject( objectType, objectPos, false, false, true );
 		if(obj==null) return null;
 
@@ -281,7 +281,6 @@ modded class MissionServer
 					obj.SetQuantityMax();
 					//obj.SetQuantityToMinimum();
 				}
-				
 			}
 		}
 		return true;
