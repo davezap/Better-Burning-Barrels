@@ -9,7 +9,6 @@ Repacking of this mod is now permitted, please read terms on the discord.
 The project is now open source and can be found here
 	https://github.com/davezap/Better-Burning-Barrels
 
-✅ Tested with DayZ 1.27 on the 16th of March 2025
 
 <!-- ----------------------------------------------------------------------- -->
 # ABOUT

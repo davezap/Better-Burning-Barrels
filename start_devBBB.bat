@@ -17,6 +17,7 @@
 
 @echo off
 :start
+c:
 ::Server name
 set serverName="DaveZ"
 ::Server files location

@@ -9,7 +9,6 @@ Repacking of this mod is now permitted, please read terms on the discord.
 The project is now open source and can be found here
 	https://github.com/davezap/Better-Burning-Barrels
 
-✅ Tested with DayZ 1.27 on the 16th of March 2025
 
 <!-- ----------------------------------------------------------------------- -->
 # ABOUT
@@ -30,17 +29,6 @@ It's probably easier to talk about the things Better Burning Barrels cannot do!
 # WHAT's NEW
 
 It's been over a year and I'm back at it! Decided it was long overdue an update.
-
-Version 0.52 - 10 Jan 2025
-- New option 'NoPain' prevents players taking damage from fires.
-- New option 'ExtinguishMethod' allows barrels to go out imidiately, naturally,
-  or after some time.
-- new script method BBB_EH::GetServerTime() returns server unix timestamp.
-- Minor internal stuff like version number constant usage.
-
-Version 0.51 - 5 Jan 2025
-- JSON object keys are now case insensitive.
-- Default Json config includes Daxst3r's Barrel
 
 Version 0.50 - 4 Jan 2025
 - You can now add Fireplace's (aka campfire) see options for barrel type. 
@@ -65,7 +53,6 @@ Version 0.50 - 4 Jan 2025
 
 See end of this document for previous change history.
 
-NOTE: The DayZ workshop version may be several versions behind the git repo.
 
 <!-- ----------------------------------------------------------------------- -->
 # HOW TO INSTALL
@@ -185,22 +172,6 @@ surface snapping.
 ### LogPlayerProximity [whole meters, 0 is default and disabled]
 Additionally record information about players proximity to this specific 
 barrel. This is independent from OnPlayerProximity
-
-
-### ExtinguishMethod [whole number, various options]
-When a fire enters the "should extinguish" state, how and when it actually goes
-out is determined by this parameter.
-- =0: Combustible items are immediately removed, putting the fire out.
-- >=1: The fire will be maintained and lit for this many seconds, and then the
-  behavior is as 0.
-- =-1: The fire will stop being maintained, meaning it will burn out naturally
-In all cases an extinguished fire is restocked with new combustible materials 
-ready for the next relight. If a relight event is received for the fire it 
-will override the timers.
-
-### NoPain [ bool true or false (default)]
-Fire hot, fire burns! But it does not have to be that way, just set NoPain
-to true and you can snuggle up really close without the usual ill effects.
 
 
 <!-- ----------------------------------------------------------------------- -->
@@ -408,94 +379,79 @@ Note: our new showroom is located in the big shed in Kamyshovo!
 
 ```
 {
-  "Version": "0.51",
-	"BarrelUpdateTime": 1,
-	"DebugBarrels": 0,
-	"DebugWeather": 600,
-	"DebugYAY": 600,
-    "BarrelLocations": [
-        {
-			"Name": "B0_RED",
-			"Colour":"Red",
-			"OnPlayerProximity":3,
-            "Open": 1,
-            "position": [12075.33, 3.089654, 3456.172119]
-		},
-        {
-			"Name": "B1_YLW",
-			"Colour":"Yellow",
-			"OnPlayerProximity":3,
-            "Open": 0,
-            "position": [12073.12, 3.12, 3455.68]
-		},
-        { 
-			"Name": "B2_GRN",
-			"Colour":"Green",
-			"OnPlayerProximity":3,
-            "Open": 0,
-            "position": [12069.923828, 3.078028, 3454.740234]
-		},
-		{
-			"Name":"Daxst3r's Barrel",
-			"OnPlayerProximity": 100,
-			"OnDuringNight": 1,
-			"Open": 1,
-			"DontSnapToGround": 1,
-			"position": [6462.057, 6.07, 2569.784],
-			"Colour": "Blue"
-		},
-        {
-			"Name": "B3_BLU",
-			"Colour":"Blue",
-			"OnPlayerProximity":3,
-            "Open": 1,
-            "position": [12078.101563, 3.096107, 3457.109619]
-		},
-        {
-			"Name":"F4",
-			"Type":"Fireplace",
-			"Tripod": true,
-			"Circle": true,
-			"OnPlayerProximity":10,
-            "position": [12070.697266, 3.116442, 3451.480469]
-		},
-        {
-			"Name":"F5",
-			"Type":"Fireplace",
-			"OnPlayerProximity":3,
-            "position": [12071.165039, 3.063281, 3448.481934]
-		},
-		{
-			"Name": "B6_RED",
-			"Colour":"Red",
-            "Open": 1,
-			"Locked": 1,
-			"OnDuringNight": 1,
-            "position": [12074.443359, 3.049184, 3441.508301]
-		},
-		{
-			"Name": "B7_BLU",
-			"Colour":"Blue",
-            "Open": 1,
-			"Locked": 1,
-			"OnDuringDay": 1,
-			"LogPlayerProximity": 10,
-            "position": [12081.784180, 3.053838, 3443.565918]
-		},
-		{
-			"Name": "B8_GRN",
-			"Colour":"Green",
-            "Open": 1,
-			"Locked": 1,
-            "position": [12079.044922, 3.034917, 3436.718750]
-		},
-        {
-			"Name":"F9_Outside",
-			"Type":"Fireplace",
-			"Circle": true,
-            "position": [12077.248047, 3.049184, 3436.181152]
-		}
-    ]
+  "Version": "0.50",
+  "BarrelUpdateTime": 1,
+  "DebugBarrels": 1,
+  "DebugWeather": 60,
+  "DebugYAY": 60,
+  "BarrelLocations": [
+    {
+      "Name": "B0_RED",
+      "Colour":"Red",
+      "OnPlayerProximity":3,
+      "Open": 1,
+      "Position": [12075.33, 3.089654, 3456.172119]
+    },
+    {
+      "Name": "B1_YLW",
+      "Colour":"Yellow",
+      "OnPlayerProximity":3,
+      "Open": 0,
+      "Position": [12073.12, 3.12, 3455.68]
+    },
+    {
+      "Name": "B2_GRN",
+      "Colour":"Green",
+      "OnPlayerProximity":3,
+      "Open": 0,
+      "Position": [12069.923828, 3.078028, 3454.740234]
+    },
+    {
+      "Name": "B3_BLU",
+      "Colour":"Blue",
+      "OnPlayerProximity":3,
+      "Open": 1,
+      "Position": [12078.101563, 3.096107, 3457.109619]
+    },
+    {
+      "Name":"F4",
+      "Type":"Fireplace",
+      "Tripod": true,
+      "Circle": true,
+      "OnPlayerProximity":10,
+      "Position": [12070.697266, 3.116442, 3451.480469]
+    },
+    {
+      "Name":"F5",
+      "Type":"Fireplace",
+      "OnPlayerProximity":3,
+      "Position": [12071.165039, 3.063281, 3448.481934]
+    },
+    {
+      "Name": "B6_RED",
+      "Colour":"Red",
+      "Open": 1,
+      "Locked": 1,
+      "OnDuringNight": 1,
+      "Position": [12074.443359, 3.049184, 3441.508301]
+    },
+    {
+      "Name": "B7_BLU",
+      "Colour":"Blue",
+      "Open": 1,
+      "Locked": 1,
+      "OnDuringDay": 1,
+      "LogPlayerProximity": 10,
+      "Position": [12081.784180, 3.053838, 3443.565918]
+    },
+    {
+      "Name": "B8_GRN",
+      "Colour":"Green",
+      "Open": 1,
+      "Locked": 1,
+      "Position": [12079.044922, 3.034917, 3436.718750]
+    }
+  ]
 }
 ```
 
